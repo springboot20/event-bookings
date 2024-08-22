@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-100;
+  }
+}
+
+@layer components {
+  .trusted-label {
+    @apply relative rounded-[4rem] bg-[#A79BE1] w-auto h-14 sm:h-16 flex items-center justify-center p-2 sm:p-4 lg:p-8 shadow-none xl:h-auto;
+  }
+}
