@@ -64,7 +64,7 @@ export const HeaderNavigation = () => {
 
                 <motion.div className="flex flex-1 items-center justify-center md:justify-start md:flex-grow-0">
                   <motion.div className="flex flex-shrink-0 items-center">
-                    <motion.p className="text-xl font-semibold sm:text-lg capitalize">
+                    <motion.p className="text-xl font-bold sm:text-lg uppercase">
                       <motion.span>book</motion.span>
                       <motion.span className="text-indigo-600">ings</motion.span>
                     </motion.p>
