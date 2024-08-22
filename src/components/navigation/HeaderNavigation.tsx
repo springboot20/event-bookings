@@ -52,7 +52,7 @@ export const HeaderNavigation = () => {
               <motion.div className="relative flex h-16 items-center justify-between w-full">
                 <motion.div className="flex items-center md:hidden">
                   {/* Mobile menu button*/}
-                  <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 dark:text-white text-gray-900 hover:dark:bg-gray-700 hover:dark:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                  <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XMarkIcon className="h-8 w-8" aria-hidden="true" strokeWidth={0.7} />
