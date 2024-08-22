@@ -4,7 +4,7 @@ import { useState } from "react";
 import { EyeIcon, EyeSlashIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { CustomErrorMessage } from "../../components/Error";
 import { loginValidation } from "../../schema/login";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/auth/useAuth";
 
 type InitialValues = {
@@ -20,9 +20,12 @@ const initialValues: InitialValues = {
 const Login = () => {
   const [show, setShow] = useState<boolean>(false);
   const { login } = useAuth();
+  const navigate = useNavigate()
 
   async function onSubmit(values: InitialValues) {
     await login(values);
+
+    await Promise.resolve(setTimeout(() => navigate("/home"), 1200));
   }
 
   return (

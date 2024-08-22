@@ -43,7 +43,7 @@ export const EventBookingsService = ({
 };
 
 export const register_user = (data: { email: string; password: string; username: string }) =>
-  EventBookingsClientApi.post("/auth/register", { data });
+  EventBookingsClientApi.post("/auth/register", data);
 
 export const login_user = (data: { email: string; password: string }) =>
-  EventBookingsClientApi.post("/auth/login", { data });
+  EventBookingsClientApi.post("/auth/login", data);

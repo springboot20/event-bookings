@@ -3,7 +3,7 @@ import { classNames } from "../../util";
 import { useState } from "react";
 import { EyeIcon, EyeSlashIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { CustomErrorMessage } from "../../components/Error";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/auth/useAuth";
 import { registerValidation } from "../../schema/register";
 
@@ -22,9 +22,12 @@ const initialValues: InitialValues = {
 const Register = () => {
   const [show, setShow] = useState<boolean>(false);
   const { register } = useAuth();
+  const navigate = useNavigate();
 
   async function onSubmit(values: InitialValues) {
-    await register(values).then((res) => {});
+    await register(values);
+
+    await Promise.resolve(setTimeout(() => navigate("/auth/login"), 1200));
   }
 
   return (
@@ -53,7 +56,8 @@ const Register = () => {
               <div className="mt-2 relative">
                 <Field
                   name="username"
-                  type="username"
+                  type="text"
+                  id="username"
                   placeholder="enter username ...."
                   className={classNames(
                     "block w-full px-3 rounded-md border-0 py-3 text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 outline-none",
@@ -82,6 +86,7 @@ const Register = () => {
                 <Field
                   name="email"
                   type="email"
+                  id="email"
                   placeholder="enter email address.."
                   className={classNames(
                     "block w-full px-3 rounded-md border-0 py-3 text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 outline-none",
@@ -110,6 +115,7 @@ const Register = () => {
                 <div className=" relative ">
                   <Field
                     name="password"
+                    id="password"
                     type={show ? "text" : "password"}
                     placeholder="enter password .."
                     className={classNames(

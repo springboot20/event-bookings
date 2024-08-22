@@ -6,11 +6,13 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "./index.css";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { AuthContextProvider } from "./context/auth/AuthContext.tsx";
+import { ToastContainer } from "react-toastify";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthContextProvider>
       <SkeletonTheme>
+        <ToastContainer />
         <App />
       </SkeletonTheme>
     </AuthContextProvider>

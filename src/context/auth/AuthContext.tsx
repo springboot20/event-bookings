@@ -21,7 +21,8 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
 
         setUser(data.user);
 
-        LocalStorage.set("user", user);
+        LocalStorage.set("user", data.user);
+
         return response;
       },
       onError(error, toast) {
@@ -40,8 +41,8 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
         setUser(data.user);
         setTokens(data.tokens);
 
-        LocalStorage.set("user", user);
-        LocalStorage.set("tokens", tokens);
+        LocalStorage.set("user", data.user);
+        LocalStorage.set("tokens", data.tokens);
         return response;
       },
       onError(error, toast) {
@@ -66,6 +67,8 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
   setAuthorizationHeader();
 
   useEffect(() => {
+    setIsLoading(true);
+
     const userFromStore = LocalStorage.get("user");
     const tokensFromStore = LocalStorage.get("tokens");
 
@@ -77,5 +80,9 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
     setIsLoading(false);
   }, []);
 
-  return <AuthContextWrapper.Provider value={value}>{children}</AuthContextWrapper.Provider>;
+  return (
+    <AuthContextWrapper.Provider value={value}>
+      {isLoading ? <Loader /> : children}
+    </AuthContextWrapper.Provider>
+  );
 };
