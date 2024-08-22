@@ -9,6 +9,9 @@ const BookingHome = lazy(() => import("../pages/home/Home"));
 const BookingEvents = lazy(() => import("../pages/events/Events"));
 const BookingEventForm = lazy(() => import("../pages/form/Event"));
 
+import { PublicRoute } from "../components/PublicRoute";
+import { PrivateRoute } from "../components/PrivateRoute";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -16,18 +19,30 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "home",
-        element: <BookingHome />,
+        element: (
+          <PublicRoute>
+            <BookingHome />
+          </PublicRoute>
+        ),
       },
       {
         path: "events",
         children: [
           {
             index: true,
-            element: <BookingEvents />,
+            element: (
+              <PrivateRoute>
+                <BookingEvents />
+              </PrivateRoute>
+            ),
           },
           {
             path: "create-event",
-            element: <BookingEventForm />,
+            element: (
+              <PrivateRoute>
+                <BookingEventForm />
+              </PrivateRoute>
+            ),
           },
         ],
       },
