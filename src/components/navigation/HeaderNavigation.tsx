@@ -110,7 +110,7 @@ export const HeaderNavigation = () => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <MenuItems className="absolute right-0 z-10 mt-5 border border-gray-400 w-40 origin-top-right rounded-md bg-white focus:outline-none focus:ring-0">
+                    <MenuItems className="absolute right-0 z-10 mt-5 py-0.5 border border-gray-400 w-40 origin-top-right rounded-md bg-white focus:outline-none focus:ring-0">
                       <MenuItem>
                         {({ active }) => (
                           <NavLink
