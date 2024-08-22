@@ -1,4 +1,5 @@
-export interface EventCa {
+export interface EventInterface {
+  _id:string
   title: string;
   description: string;
   price: number;

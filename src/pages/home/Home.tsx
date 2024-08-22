@@ -1,4 +1,4 @@
-import { FeaturedEventCard } from "../../components/events/Card";
+import { FeaturedEventCard } from "../../components/events/FeaturedEvent";
 
 const BookingHome = () => {
   return (

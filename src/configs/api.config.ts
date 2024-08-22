@@ -1,5 +1,6 @@
 import axios, { isAxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
+import { EventInput } from "../types/context";
 
 export const EventBookingsClientApi = axios.create({
   baseURL: "http://localhost:5020/api/v1",
@@ -47,3 +48,14 @@ export const register_user = (data: { email: string; password: string; username:
 
 export const login_user = (data: { email: string; password: string }) =>
   EventBookingsClientApi.post("/auth/login", data);
+
+// event
+
+export const createNewEvent = (data: EventInput) => EventBookingsClientApi.post("/events", data);
+
+export const updateExistingEvent = (data: EventInput, id: string) =>
+  EventBookingsClientApi.patch(`/events/${id}`, data);
+
+export const fetchEvents = () => EventBookingsClientApi.get("/events");
+
+export const fetchUserEvent = (id: string) => EventBookingsClientApi.get(`/events/${id}`);

@@ -7,6 +7,7 @@ export const EventBookingsApiReqeustHandler = async ({
   onSuccess,
   onError,
 }: ApiRequestHandlerProps) => {
+  
   setLoading && setLoading(true);
 
   try {
@@ -22,7 +23,7 @@ export const EventBookingsApiReqeustHandler = async ({
       if (isBrowser) window.location.href = "./home";
     }
     onError(error?.response?.data?.message ?? "something went wrong", toast.error);
-  }finally{
+  } finally {
     setLoading && setLoading(false);
   }
 };

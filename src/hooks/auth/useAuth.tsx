@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { AuthContextWrapper } from "../../context/auth/AuthContext";
+import { AuthContext } from "../../context/auth/AuthContext";
 
-
-export const useAuth = () => useContext(AuthContextWrapper);
+export const useAuth = () => useContext(AuthContext);

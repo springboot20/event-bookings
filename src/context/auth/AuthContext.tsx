@@ -1,11 +1,15 @@
 import React, { useEffect, useState, createContext, useMemo } from "react";
-import { AuthContext, AuthContextProviderProps, TokensInterface } from "../../types/context";
+import {
+  AuthContextInteface,
+  AuthContextProviderProps,
+  TokensInterface,
+} from "../../types/context";
 import { UserInterface } from "../../types/user";
 import { EventBookingsApiReqeustHandler, LocalStorage } from "../../api/api";
 import { EventBookingsClientApi, login_user, register_user } from "../../configs/api.config";
 import { Loader } from "../../components/loaders/Loader";
 
-export const AuthContextWrapper = createContext<AuthContext>({} as AuthContext);
+export const AuthContext = createContext<AuthContextInteface>({} as AuthContextInteface);
 
 export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -16,12 +20,14 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
     await EventBookingsApiReqeustHandler({
       api: async () => await register_user(data),
       setLoading: setIsLoading,
-      onSuccess: (response) => {
+      onSuccess: (response, message, toast) => {
         const { data } = response;
 
         setUser(data.user);
 
         LocalStorage.set("user", data.user);
+
+        toast(message);
 
         return response;
       },
@@ -35,7 +41,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
     await EventBookingsApiReqeustHandler({
       api: async () => await login_user(data),
       setLoading: setIsLoading,
-      onSuccess: (response) => {
+      onSuccess: (response, message, toast) => {
         const { data } = response;
 
         setUser(data.user);
@@ -43,6 +49,8 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
 
         LocalStorage.set("user", data.user);
         LocalStorage.set("tokens", data.tokens);
+
+        toast(message);
         return response;
       },
       onError(error, toast) {
@@ -81,8 +89,6 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
   }, []);
 
   return (
-    <AuthContextWrapper.Provider value={value}>
-      {isLoading ? <Loader /> : children}
-    </AuthContextWrapper.Provider>
+    <AuthContext.Provider value={value}>{isLoading ? <Loader /> : children}</AuthContext.Provider>
   );
 };

@@ -8,17 +8,17 @@ export const EventSkeletonLoading = ({ cardsNumber }: { cardsNumber: number }) =
       return (
         <motion.div
           layout
-          className="h-[22rem] bg-white overflow-hidden relative rounded-xl border"
+          className="h-[18rem] bg-white overflow-hidden relative rounded-xl border"
           key={ind}
         >
-          <motion.header className="h-1/2  ">
+          <motion.header className="h-1/2">
             <Skeleton
               height={"50%"}
               style={{ marginTop: "-10px", position: "absolute" }}
               borderRadius={0}
             />
           </motion.header>
-          <motion.div className="relative p-3 flex flex-col gap-5">
+          <motion.div className="relative p-3 flex flex-col gap-1.5">
             <motion.div className="grid grid-cols-2 gap-9">
               <motion.h1>
                 <Skeleton className="h-6" containerClassName="flex-1" />

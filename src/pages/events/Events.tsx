@@ -1,16 +1,25 @@
 import { useNavigate } from "react-router-dom";
-import EventCategory from "./Category";
 import React, { useState } from "react";
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
+import { EventSkeletonLoading } from "../../components/loaders/SkeletonLoader";
+import { EventCard } from "../../components/events/Event";
+import { useEvent } from "../../hooks/events/useEvent";
 
 const Events = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const { events, isLoading } = useEvent();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value);
 
-  console.log(searchQuery);
+  const gridVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.3 } },
+  };
+
+  console.log(isLoading)
+
   return (
     <motion.div>
       <motion.div className="mx-auto max-w-xl mb-4">
@@ -43,7 +52,19 @@ const Events = () => {
           create event
         </button>
       </header>
-      <EventCategory />
+      <motion.div
+        layout
+        initial="hidden"
+        animate="visible"
+        variants={gridVariants}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4 gap-5"
+      >
+        {isLoading ? (
+          <EventSkeletonLoading cardsNumber={8} />
+        ) : (
+          events?.map((c, ind) => <EventCard key={ind} {...c} />)
+        )}
+      </motion.div>
     </motion.div>
   );
 };

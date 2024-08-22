@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 export const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { tokens, user } = useAuth();
 
-  if (!user || !tokens.accessToken) return <Navigate to={"/auth/login"} replace />;
+  if (!user || !tokens) return <Navigate to={"/auth/login"} replace />;
 
   return children;
 };

@@ -37,6 +37,9 @@ export const router = createBrowserRouter([
             ),
           },
           {
+            path: ":id",
+          },
+          {
             path: "create-event",
             element: (
               <PrivateRoute>
