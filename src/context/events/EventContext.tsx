@@ -8,105 +8,95 @@ import {
   updateExistingEvent,
 } from "../../configs/api.config";
 import { EventInterface } from "../../types/events";
+import { toast } from "react-toastify";
 
 export const EventContext = createContext<EventContextInterface>({} as EventContextInterface);
 
 export const EventContextProvider: React.FC<EventContextProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [events, setEvents] = useState<EventInterface[]>([]);
-  const [event, setEvent] = useState<EventInterface>({} as EventInterface);
+  const [events, setEvents] = useState<EventInterface[]>(LocalStorage.get("events"));
+  const [event, setEvent] = useState<EventInterface>(LocalStorage.get("event"));
 
   const createEvent = async (data: EventInput) => {
-    await EventBookingsApiReqeustHandler({
-      api: async () => await createNewEvent(data),
-      setLoading: setIsLoading,
-      onSuccess(response, message, toast) {
+    await EventBookingsApiReqeustHandler(
+      async () => await createNewEvent(data),
+      setIsLoading,
+      (response) => {
         const { data } = response;
 
-        toast(message);
+        toast.success(data.message);
 
         return data;
       },
-      onError(error, toast) {
-        toast(error);
-      },
-    });
+      toast.error,
+    );
   };
 
   const fetchAllEvents = useCallback(async () => {
-    await EventBookingsApiReqeustHandler({
-      api: async () => await fetchEvents(),
-      setLoading: setIsLoading,
-      onSuccess(response, message, toast) {
+    await EventBookingsApiReqeustHandler(
+      async () => await fetchEvents(),
+      setIsLoading,
+      (response) => {
         const { data } = response;
 
         setEvents(data.events);
         LocalStorage.set("events", data.events);
 
-        toast(message);
+        toast.success(data.message);
 
-
-        console.log(data)
+        console.log(data);
 
         return data;
       },
-      onError(error, toast) {
-        toast(error);
-      },
-    });
+      toast.error,
+    );
   }, []);
 
   const fetchEvent = async (id: string) => {
-    await EventBookingsApiReqeustHandler({
-      api: async () => await fetchUserEvent(id),
-      setLoading: setIsLoading,
-      onSuccess(response, message, toast) {
+    await EventBookingsApiReqeustHandler(
+      async () => await fetchUserEvent(id),
+      setIsLoading,
+      (response) => {
         const { data } = response;
 
         setEvent(data.event);
 
         LocalStorage.set("event", data.event);
 
-        toast(message);
+        toast.success(data.message);
         return data;
       },
-      onError(error, toast) {
-        toast(error);
-      },
-    });
+      toast.error,
+    );
   };
 
   const updateEvent = async (data: EventInput, id: string) => {
-    await EventBookingsApiReqeustHandler({
-      api: async () => await updateExistingEvent(data, id),
-      setLoading: setIsLoading,
-      onSuccess(response, message, toast) {
+    await EventBookingsApiReqeustHandler(
+      async () => await updateExistingEvent(data, id),
+      setIsLoading,
+      (response) => {
         const { data } = response;
-        toast(message);
+
+        toast.success(data.message);
 
         return data;
       },
-      onError(error, toast) {
-        toast(error);
-      },
-    });
+      toast.error,
+    );
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    const event = LocalStorage.get("event");
-    const events = LocalStorage.get("events");
+    let didCancle = false;
 
-    if (event && events) {
-      setEvent(event);
-      setEvents(events);
+    if (!didCancle) {
+      fetchAllEvents();
     }
 
-    fetchAllEvents();
-    setIsLoading(false);
+    return () => {
+      didCancle = true;
+    };
   }, []);
 
-  console.log(isLoading);
   const value = useMemo(
     () => ({ isLoading, event, createEvent, events, updateEvent, fetchEvent }),
     [],

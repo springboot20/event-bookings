@@ -1,13 +1,12 @@
-import { toast } from "react-toastify";
-import { ApiRequestHandlerProps } from "../types/api";
+import { AxiosResponse } from "axios";
+import { ApiResponseInterface } from "../types/api";
 
-export const EventBookingsApiReqeustHandler = async ({
-  api,
-  setLoading,
-  onSuccess,
-  onError,
-}: ApiRequestHandlerProps) => {
-  
+export const EventBookingsApiReqeustHandler = async (
+  api: () => Promise<AxiosResponse<ApiResponseInterface, any>>,
+  setLoading: ((loading: boolean) => void) | null,
+  onSuccess: (data: ApiResponseInterface) => void,
+  onError: (error: string) => void,
+) => {
   setLoading && setLoading(true);
 
   try {
@@ -15,14 +14,14 @@ export const EventBookingsApiReqeustHandler = async ({
     const { data } = response;
 
     if (data?.success && response.status.toString().startsWith("2")) {
-      onSuccess(data, data.message, toast.success);
+      onSuccess(data);
     }
   } catch (error: any) {
     if ([401, 403].includes(error?.response?.data.statusCode)) {
       LocalStorage.clear();
       if (isBrowser) window.location.href = "./home";
     }
-    onError(error?.response?.data?.message ?? "something went wrong", toast.error);
+    onError(error?.response?.data?.message ?? "something went wrong");
   } finally {
     setLoading && setLoading(false);
   }

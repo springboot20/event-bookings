@@ -6,42 +6,40 @@ import {
 } from "../../types/context";
 import { UserInterface } from "../../types/user";
 import { EventBookingsApiReqeustHandler, LocalStorage } from "../../api/api";
-import { EventBookingsClientApi, login_user, register_user } from "../../configs/api.config";
-import { Loader } from "../../components/loaders/Loader";
+import { login_user, logOut, register_user } from "../../configs/api.config";
+import { toast } from "react-toastify";
 
 export const AuthContext = createContext<AuthContextInteface>({} as AuthContextInteface);
 
 export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<UserInterface>(LocalStorage.get("user"));
+  const [user, setUser] = useState<UserInterface>(LocalStorage.get("user") as UserInterface);
   const [tokens, setTokens] = useState<TokensInterface>({} as TokensInterface);
 
   const register = async (data: { email: string; password: string; username: string }) => {
-    await EventBookingsApiReqeustHandler({
-      api: async () => await register_user(data),
-      setLoading: setIsLoading,
-      onSuccess: (response, message, toast) => {
+    await EventBookingsApiReqeustHandler(
+      async () => await register_user(data),
+      setIsLoading,
+      (response) => {
         const { data } = response;
 
         setUser(data.user);
 
         LocalStorage.set("user", data.user);
 
-        toast(message);
+        toast.success(data.message);
 
         return response;
       },
-      onError(error, toast) {
-        toast(error);
-      },
-    });
+      toast.error,
+    );
   };
 
   const login = async (data: { email: string; password: string }) => {
-    await EventBookingsApiReqeustHandler({
-      api: async () => await login_user(data),
-      setLoading: setIsLoading,
-      onSuccess: (response, message, toast) => {
+    await EventBookingsApiReqeustHandler(
+      async () => await login_user(data),
+      setIsLoading,
+      (response) => {
         const { data } = response;
 
         setUser(data.user);
@@ -50,29 +48,34 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
         LocalStorage.set("user", data.user);
         LocalStorage.set("tokens", data.tokens);
 
-        toast(message);
+        toast.success(data.message);
         return response;
       },
-      onError(error, toast) {
-        toast(error);
+      toast.error,
+    );
+  };
+
+  const logout = async () => {
+    await EventBookingsApiReqeustHandler(
+      async () => await logOut(),
+      setIsLoading,
+      (response) => {
+        const { data } = response;
+
+        setUser({} as UserInterface);
+        setTokens({} as TokensInterface);
+
+        LocalStorage.remove("user");
+        LocalStorage.remove("tokens");
+
+        toast.success(data.message);
+        return data;
       },
-    });
+      toast.error,
+    );
   };
 
-  const value = useMemo(() => ({ user, tokens, register, login }), []);
-
-  const setAuthorizationHeader = () => {
-    if (tokens.accessToken) {
-      EventBookingsClientApi.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${tokens.accessToken}`;
-    } else {
-      delete EventBookingsClientApi.defaults.headers.common["Authorization"];
-      LocalStorage.remove("token");
-    }
-  };
-
-  setAuthorizationHeader();
+  const value = useMemo(() => ({ user, tokens, register, login, logout }), [user, tokens]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -88,7 +91,5 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
     setIsLoading(false);
   }, []);
 
-  return (
-    <AuthContext.Provider value={value}>{isLoading ? <Loader /> : children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

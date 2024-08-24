@@ -11,12 +11,9 @@ import {
 import { NavLink } from "react-router-dom";
 import { classNames } from "../../util";
 import { Fragment } from "react";
-import {
-  XMarkIcon,
-  Bars3Icon,
-  UserCircleIcon,
-} from "@heroicons/react/24/outline";
+import { XMarkIcon, Bars3Icon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
+import { useAuth } from "../../hooks/auth/useAuth";
 
 interface Routes {
   title: string;
@@ -29,7 +26,7 @@ export const HeaderNavigation = () => {
     {
       current: true,
       title: "home",
-      to: "/home",
+      to: "/",
     },
     {
       current: true,
@@ -42,6 +39,8 @@ export const HeaderNavigation = () => {
       to: "/bookings",
     },
   ];
+
+  const { logout } = useAuth();
 
   return (
     <Disclosure as="nav" className="fixed top-0 left-0 z-20 right-0 bg-white shadow-sm">
@@ -260,11 +259,14 @@ export const HeaderNavigation = () => {
 
                       <MenuItem>
                         {({ active }) => (
-                          <NavLink
-                            to="/auth/login"
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              await logout();
+                            }}
                             className={classNames(
                               active ? "bg-gray-100" : "",
-                              "flex items-center gap-2 px-4 py-2 text-sm text-gray-800 font-semibold",
+                              "flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-800 font-semibold",
                             )}
                           >
                             <motion.svg
@@ -301,7 +303,7 @@ export const HeaderNavigation = () => {
                             </motion.svg>
 
                             <motion.span>Log Out</motion.span>
-                          </NavLink>
+                          </button>
                         )}
                       </MenuItem>
                     </MenuItems>

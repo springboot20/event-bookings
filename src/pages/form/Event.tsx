@@ -84,7 +84,7 @@ const EventForm = () => {
       </header>
 
       <Formik initialValues={iniitialValues} onSubmit={onSubmit}>
-        {({ errors, touched, dirty, resetForm }) => (
+        {({ errors, touched, dirty }) => (
           <Form className="mt-4 w-full bg-white rounded-lg p-6 max-w-xl border">
             <fieldset className="mt-2">
               <label

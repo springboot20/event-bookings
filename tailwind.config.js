@@ -3,6 +3,7 @@ import defaultTheme from "tailwindcss/defaultTheme";
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  mode:"jit",
   content: ["./index.html", "./src/**/*.{ts,tsx}", "./assets/*.svg"],
   dark: "class",
   theme: {

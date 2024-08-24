@@ -5,11 +5,14 @@ import { motion } from "framer-motion";
 import { EventSkeletonLoading } from "../../components/loaders/SkeletonLoader";
 import { EventCard } from "../../components/events/Event";
 import { useEvent } from "../../hooks/events/useEvent";
+import { useAuth } from "../../hooks/auth/useAuth";
+import { AcceptedPersmissonRoles } from "../../util";
 
 const Events = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { events, isLoading } = useEvent();
+  const { user } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value);
 
@@ -18,7 +21,7 @@ const Events = () => {
     visible: { opacity: 1, transition: { duration: 0.3 } },
   };
 
-  console.log(isLoading)
+  console.log(isLoading, events);
 
   return (
     <motion.div>
@@ -44,13 +47,15 @@ const Events = () => {
       <header className="flex items-center justify-between">
         <h1 className="text-base sm:text-xl font-semibold text-gray-900">Event Lists</h1>
 
-        <button
-          onClick={() => navigate("/events/create-event")}
-          className="flex items-center gap-2 text-xs font-semibold py-2.5 text-white px-3 rounded-lg bg-indigo-500 uppercase tracking-wider"
-        >
-          <PlusIcon className="h-4 text-white" />
-          create event
-        </button>
+        {user?.role === AcceptedPersmissonRoles.ADMIN && (
+          <button
+            onClick={() => navigate("/events/create-event")}
+            className="flex items-center gap-2 text-xs font-semibold py-2.5 text-white px-3 rounded-lg bg-indigo-500 uppercase tracking-wider"
+          >
+            <PlusIcon className="h-4 text-white" />
+            create event
+          </button>
+        )}
       </header>
       <motion.div
         layout

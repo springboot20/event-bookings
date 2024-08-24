@@ -6,6 +6,7 @@ export interface AuthContextInteface {
   tokens: TokensInterface;
   register: (data: { email: string; password: string; username: string }) => Promise<void>;
   login: (data: { email: string; password: string }) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export interface TokensInterface {
@@ -24,7 +25,7 @@ export interface AuthContextProviderProps {
 export interface EventContextInterface {
   isLoading: boolean;
   events: EventInterface[] | undefined;
-  event: EventInterface | undefined;
+  event: EventInterface;
   fetchEvent: (id: string) => Promise<void>;
   createEvent: (data: EventInput) => Promise<void>;
   updateEvent: (data: EventInput, id: string) => Promise<void>;
