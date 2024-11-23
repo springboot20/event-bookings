@@ -31,10 +31,10 @@ const Register = () => {
       .then((response) => {
         toast.success(response?.message);
         resetForm();
-        setTimeout(() => navigate('/auth/login'), 1200);
+        setTimeout(() => navigate('/login'), 1200);
       })
       .catch((error) => {
-        console.log(error);
+        toast(error?.error || error?.data?.message, { type: 'error' });
       });
   }
 

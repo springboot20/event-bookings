@@ -10,7 +10,6 @@ const BookingHome = () => {
 
   const events = data?.data?.events;
 
-  console.log(data);
   return isLoading ? (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4 gap-5'>
       <EventSkeletonLoading cardsNumber={7} />
