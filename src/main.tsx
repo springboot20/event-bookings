@@ -5,19 +5,17 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import "./index.css";
 import { SkeletonTheme } from "react-loading-skeleton";
-import { AuthContextProvider } from "./context/auth/AuthContext.tsx";
 import { ToastContainer } from "react-toastify";
-import { EventContextProvider } from "./context/events/EventContext.tsx";
+import { Provider } from "react-redux";
+import store from "./app/store.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AuthContextProvider>
-      <EventContextProvider>
-        <SkeletonTheme>
-          <ToastContainer />
-          <App />
-        </SkeletonTheme>
-      </EventContextProvider>
-    </AuthContextProvider>
+    <Provider store={store}>
+      <SkeletonTheme>
+        <ToastContainer />
+        <App />
+      </SkeletonTheme>
+    </Provider>
   </React.StrictMode>,
 );

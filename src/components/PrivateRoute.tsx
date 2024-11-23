@@ -1,6 +1,7 @@
-import React from "react";
-import { useAuth } from "../hooks/auth/useAuth";
-import { Navigate } from "react-router-dom";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAppSelector } from '../app/hooks';
+import { RootState } from '../app/store';
 
 export const PrivateRoute = ({
   children,
@@ -9,14 +10,10 @@ export const PrivateRoute = ({
   children: React.ReactNode;
   roles: string[];
 }) => {
-  const { tokens, user } = useAuth();
+  const { isAuthenticated, user } = useAppSelector((state: RootState) => state.auth);
 
-  const allowedRoles = roles ?? ["ADMIN"];
-
-  if (!user || !tokens) return <Navigate to={"/auth/login"} replace />;
-
-  if (!allowedRoles.includes(user.role)) {
-    return <Navigate to="/auth/login" />;
+  if ((roles && !roles.includes(user.role)) || !isAuthenticated) {
+    return <Navigate to='/auth/login' />;
   }
 
   return children;

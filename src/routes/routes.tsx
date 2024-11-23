@@ -1,24 +1,25 @@
-import { lazy } from "react";
-import { createBrowserRouter } from "react-router-dom";
-import Login from "../pages/login/Login";
-import AuthLayout from "../layout/AuthLayout";
-import Register from "../pages/register/Register";
-import { BookingHome } from "../pages/home/Home";
+/* eslint-disable react-refresh/only-export-components */
+import { lazy } from 'react';
+import { createBrowserRouter } from 'react-router-dom';
+import Login from '../pages/login/Login';
+import AuthLayout from '../layout/AuthLayout';
+import Register from '../pages/register/Register';
 
-const BookingLayout = lazy(() => import("../layout/BookingLayout"));
-// const BookingHome = lazy(() => import("../pages/home/Home"));
-const BookingEvents = lazy(() => import("../pages/events/Events"));
-const IndividualBookingEvent = lazy(() => import("../pages/events/Event"));
-const BookingEventForm = lazy(() => import("../pages/form/Event"));
+const BookingLayout = lazy(() => import('../layout/BookingLayout'));
+const BookingHome = lazy(() => import('../pages'));
+const BookingEvents = lazy(() => import('../pages/events'));
+const IndividualBookingEvent = lazy(() => import('../pages/events/$id'));
+const CreateEventForm = lazy(() => import('../pages/events/create'));
+const EditEventForm = lazy(() => import('../pages/events/edit/$id'));
 
-import { PrivateRoute } from "../components/PrivateRoute";
+import { PrivateRoute } from '../components/PrivateRoute';
 
-import { AcceptedPersmissonRoles } from "../util";
-import { PublicRoute } from "../components/PublicRoute";
+import { AcceptedPersmissonRoles } from '../util';
+import { PublicRoute } from '../components/PublicRoute';
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <BookingLayout />,
     children: [
       {
@@ -30,7 +31,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "events",
+        path: 'events',
         children: [
           {
             index: true,
@@ -41,14 +42,26 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: ":id",
-            element: <IndividualBookingEvent />,
+            path: ':eventId',
+            element: (
+              <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN, AcceptedPersmissonRoles.USER]}>
+                <IndividualBookingEvent />
+              </PrivateRoute>
+            ),
           },
           {
-            path: "create-event",
+            path: 'create-event',
             element: (
               <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
-                <BookingEventForm />
+                <CreateEventForm />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: 'edit-event/:eventId',
+            element: (
+              <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
+                <EditEventForm />
               </PrivateRoute>
             ),
           },
@@ -57,7 +70,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/auth",
+    path: '/auth',
     element: (
       <PublicRoute>
         <AuthLayout />
@@ -65,11 +78,11 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "login",
+        path: 'login',
         element: <Login />,
       },
       {
-        path: "register",
+        path: 'register',
         element: <Register />,
       },
     ],

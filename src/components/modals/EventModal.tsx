@@ -30,7 +30,9 @@ export const EventModal = ({
             className="bg-white border rounded-xl max-w-sm w-full p-4 h-[32rem]"
             role="button"
           >
-            <header className="rounded-xl h-64 border w-full bg-white"></header>
+            <header className="rounded-xl overflow-hidden h-64 border w-full bg-white">
+              <img src={event?.image?.url} alt="" />
+            </header>
             <div className="mt-2 space-y-5 h-44">
               <h3 className="text-base text-gray-800 font-medium">{event?.title}</h3>
               <div className="space-y-5 self-end">

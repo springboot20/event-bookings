@@ -1,15 +1,12 @@
 import React from "react";
-import { useAuth } from "../hooks/auth/useAuth";
 import { Navigate } from "react-router-dom";
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
 
 export const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tokens, user } = useAuth();
-
-  console.log("loaded");
+  const { tokens, user } = useAppSelector((state: RootState) => state.auth);
 
   if (tokens && user?._id) return <Navigate to={"/"} />;
-
-  console.log(children)
 
   return children;
 };

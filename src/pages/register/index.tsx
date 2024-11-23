@@ -151,7 +151,7 @@ const Register = () => {
             <button
               type='submit'
               disabled={!isValid}
-              className='disabled:bg-indigo-300 disabled:cursor-not-allowed block py-2.5 w-full mt-5 bg-indigo-500 rounded-md uppercase  shadow-md'>
+              className='disabled:bg-indigo-300 disabled:cursor-not-allowed block py-2.5 w-full mt-5 bg-indigo-500 rounded-md uppercase shadow-md'>
               {isSubmitting ? (
                 <div className='flex items-center justify-center'>
                   <svg className='h-7 w-7 animate-spin' viewBox='3 3 18 18'>
@@ -176,7 +176,7 @@ const Register = () => {
         <p className='text-center text-sm font-normal text-gray-800'>
           Already have an account?{' '}
           <Link
-            to='/login'
+            to='/auth/login'
             className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'>
             Login
           </Link>
