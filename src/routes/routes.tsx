@@ -1,90 +1,105 @@
-/* eslint-disable react-refresh/only-export-components */
-import { lazy } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
-import Login from '../pages/login';
-import AuthLayout from '../layout/AuthLayout';
-import Register from '../pages/register';
-
-const BookingLayout = lazy(() => import('../layout/BookingLayout'));
-const BookingHome = lazy(() => import('../pages'));
-const BookingEvents = lazy(() => import('../pages/events'));
-const IndividualBookingEvent = lazy(() => import('../pages/events/$id'));
-const CreateEventForm = lazy(() => import('../pages/events/create'));
-const EditEventForm = lazy(() => import('../pages/events/edit/$id'));
-
-import { PrivateRoute } from '../components/PrivateRoute';
-
-import { AcceptedPersmissonRoles } from '../util';
+import BookingLayout from '../layout/BookingLayout';
 import { PublicRoute } from '../components/PublicRoute';
+import AuthLayout from '../layout/AuthLayout';
+import Login from '../pages/login';
+import Register from '../pages/register';
+import { PrivateRoute } from '../components/PrivateRoute';
+import { AcceptedPersmissonRoles } from '../util';
+import { createBrowserRouter } from 'react-router-dom';
 
-export const router = createBrowserRouter([
+type PagesTypes = Record<
+  string,
   {
-    path: '/',
-    element: <BookingLayout />,
-    children: [
-      {
-        index: true,
-        element: (
-          <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN, AcceptedPersmissonRoles.USER]}>
-            <BookingHome />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: 'events',
+    default: React.ComponentType;
+    loader?: () => Promise<any>;
+    action?: () => Promise<any>;
+    ErrorBoundary: React.ComponentType;
+  }
+>;
+
+type RouteType = {
+  Element: React.ComponentType;
+  path: string;
+  loader?: () => Promise<any>;
+  action?: () => Promise<any>;
+  ErrorBoundary: React.ComponentType;
+};
+
+export const router = () => {
+  const pages: PagesTypes = import.meta.glob('../pages/**/*.tsx', { eager: true });
+
+  const routes: RouteType[] = [];
+  let filename: string | undefined;
+  for (const path of Object.keys(pages)) {
+    filename = path.match(/\.\/pages\/(.*)\.tsx$/)?.[1];
+
+    if (!filename) {
+      continue;
+    }
+
+    const pathname = filename.includes('$')
+      ? filename.replace('$', ':')
+      : filename.replace(/\/index/, '');
+
+    routes.push({
+      path: filename === 'index' ? '/' : `/${pathname.toLowerCase()}`,
+      Element: pages[path]?.default,
+      loader: pages[path]?.loader,
+      action: pages[path]?.action,
+      ErrorBoundary: pages[path]?.ErrorBoundary,
+    });
+  }
+
+  const router = createBrowserRouter(
+    routes.map(({ Element, ErrorBoundary, ...rest }) => {
+      const { path } = rest;
+      return {
         children: [
           {
-            index: true,
-            element: (
-              <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN, AcceptedPersmissonRoles.USER]}>
-                <BookingEvents />
-              </PrivateRoute>
-            ),
+            element: <BookingLayout />,
+            children: [
+              {
+                ...rest,
+                element:
+                  path.split('/').includes('create') || path.split('/').includes('edit') ? (
+                    <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
+                      <Element />
+                    </PrivateRoute>
+                  ) : path === '/' ? (
+                    <PublicRoute>
+                      <Element />
+                    </PublicRoute>
+                  ) : (
+                    <PrivateRoute
+                      roles={[AcceptedPersmissonRoles.USER, AcceptedPersmissonRoles.ADMIN]}>
+                      <Element />
+                    </PrivateRoute>
+                  ),
+                ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
+              },
+            ],
           },
           {
-            path: ':eventId',
             element: (
-              <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN, AcceptedPersmissonRoles.USER]}>
-                <IndividualBookingEvent />
-              </PrivateRoute>
+              <PublicRoute>
+                <AuthLayout />
+              </PublicRoute>
             ),
-          },
-          {
-            path: 'create-event',
-            element: (
-              <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
-                <CreateEventForm />
-              </PrivateRoute>
-            ),
-          },
-          {
-            path: 'edit-event/:eventId',
-            element: (
-              <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
-                <EditEventForm />
-              </PrivateRoute>
-            ),
+            children: [
+              {
+                path: 'login',
+                element: <Login />,
+              },
+              {
+                path: 'register',
+                element: <Register />,
+              },
+            ],
           },
         ],
-      },
-    ],
-  },
-  {
-    path: '/auth',
-    element: (
-      <PublicRoute>
-        <AuthLayout />
-      </PublicRoute>
-    ),
-    children: [
-      {
-        path: 'login',
-        element: <Login />,
-      },
-      {
-        path: 'register',
-        element: <Register />,
-      },
-    ],
-  },
-]);
+      };
+    })
+  );
+
+  return router;
+};
