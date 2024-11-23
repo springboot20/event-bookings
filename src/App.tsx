@@ -4,8 +4,10 @@ import { Loader } from './components/loaders/Loader';
 import BookingLayout from './layout/BookingLayout';
 import { PublicRoute } from './components/PublicRoute';
 import AuthLayout from './layout/AuthLayout';
-import Login from './pages/login/Login';
-import Register from './pages/register/Register';
+import Login from './pages/login';
+import Register from './pages/register';
+import { PrivateRoute } from './components/PrivateRoute';
+import { AcceptedPersmissonRoles } from './util';
 
 type PagesTypes = Record<
   string,
@@ -17,12 +19,21 @@ type PagesTypes = Record<
   }
 >;
 
+type RouteType = {
+  Element: React.ComponentType;
+  path: string;
+  loader?: () => Promise<any>;
+  action?: () => Promise<any>;
+  ErrorBoundary: React.ComponentType;
+};
+
 export default function App() {
   const pages: PagesTypes = import.meta.glob('./pages/**/*.tsx', { eager: true });
 
-  const routes = [];
+  const routes: RouteType[] = [];
+  let filename: string | undefined;
   for (const path of Object.keys(pages)) {
-    const filename = path.match(/\.\/pages\/(.*)\.tsx$/)?.[1];
+    filename = path.match(/\.\/pages\/(.*)\.tsx$/)?.[1];
 
     if (!filename) {
       continue;
@@ -41,38 +52,57 @@ export default function App() {
     });
   }
 
+  console.log(routes);
+
   const router = createBrowserRouter(
-    routes.map(({ Element, ErrorBoundary, ...rest }) => ({
-      children: [
-        {
-          element: <BookingLayout />,
-          children: [
-            {
-              ...rest,
-              element: <Element />,
-              ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
-            },
-          ],
-        },
-        {
-          element: (
-            <PublicRoute>
-              <AuthLayout />
-            </PublicRoute>
-          ),
-          children: [
-            {
-              path: 'login',
-              element: <Login />,
-            },
-            {
-              path: 'register',
-              element: <Register />,
-            },
-          ],
-        },
-      ],
-    }))
+    routes.map(({ Element, ErrorBoundary, ...rest }) => {
+      const { path } = rest;
+      return {
+        children: [
+          {
+            element: <BookingLayout />,
+            children: [
+              {
+                ...rest,
+                element:
+                  path.split('/').includes('create') || path.split('/').includes('edit') ? (
+                    <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
+                      <Element />
+                    </PrivateRoute>
+                  ) : path === '/' ? (
+                    <PublicRoute>
+                      <Element />
+                    </PublicRoute>
+                  ) : (
+                    <PrivateRoute
+                      roles={[AcceptedPersmissonRoles.USER, AcceptedPersmissonRoles.ADMIN]}>
+                      <Element />
+                    </PrivateRoute>
+                  ),
+                ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
+              },
+            ],
+          },
+          {
+            element: (
+              <PublicRoute>
+                <AuthLayout />
+              </PublicRoute>
+            ),
+            children: [
+              {
+                path: 'login',
+                element: <Login />,
+              },
+              {
+                path: 'register',
+                element: <Register />,
+              },
+            ],
+          },
+        ],
+      };
+    })
   );
 
   return (

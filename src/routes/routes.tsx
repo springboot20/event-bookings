@@ -1,9 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Login from '../pages/login/Login';
+import Login from '../pages/login';
 import AuthLayout from '../layout/AuthLayout';
-import Register from '../pages/register/Register';
+import Register from '../pages/register';
 
 const BookingLayout = lazy(() => import('../layout/BookingLayout'));
 const BookingHome = lazy(() => import('../pages'));

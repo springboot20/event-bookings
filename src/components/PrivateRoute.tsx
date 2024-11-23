@@ -12,8 +12,8 @@ export const PrivateRoute = ({
 }) => {
   const { isAuthenticated, user } = useAppSelector((state: RootState) => state.auth);
 
-  if ((roles && !roles.includes(user.role)) || !isAuthenticated) {
-    return <Navigate to='/auth/login' />;
+  if ((roles && !roles.includes(user?.role)) || !isAuthenticated) {
+    return <Navigate to='/login' />;
   }
 
   return children;
