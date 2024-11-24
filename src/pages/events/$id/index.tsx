@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useGetEventByIdQuery } from '../../features/event/event.slice';
-import { EventInterface } from '../../types/events';
+import { useGetEventByIdQuery } from '../../../features/event/event.slice';
+import { EventInterface } from '../../../types/events';
 import { toast } from 'react-toastify';
 
 const IndividualEvent: React.FC = () => {
@@ -18,7 +18,7 @@ const IndividualEvent: React.FC = () => {
   }, [message]);
 
   return (
-    <div className='bg-white border rounded-xl p-4 h-fit md:max-w-sm w-full'>
+    <div className='bg-white border rounded-xl p-4 h-fit md:max-w-sm w-full py-4'>
       <header className='rounded-xl h-52 overflow-hidden border w-full bg-white'>
         <img src={event?.image?.url} alt='' className='h-full w-full object-cover' />
       </header>
