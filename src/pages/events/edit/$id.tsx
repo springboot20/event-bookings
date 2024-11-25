@@ -9,10 +9,10 @@ import {
 } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 
-import { classNames } from '../../../../util';
-import { useCreateEventMutation } from '../../../../features/event/event.slice';
-import { useGetAllCategoriesQuery } from '../../../../features/category/category.slice';
-import { CategoryInterface } from '../../../../types/events';
+import { classNames } from '../../../util';
+import { useCreateEventMutation } from '../../../features/event/event.slice';
+import { useGetAllCategoriesQuery } from '../../../features/category/category.slice';
+import { CategoryInterface } from '../../../types/events';
 
 interface InitialValues {
   title: string;

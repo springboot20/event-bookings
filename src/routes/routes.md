@@ -22,7 +22,8 @@ type RouteType = {
   path: string;
   loader?: () => Promise<any>;
   action?: () => Promise<any>;
-  ErrorBoundary: React.ComponentType;
+  ErrorBoundary?: React.ComponentType;
+  children?: RouteType[];
 };
 
 const authroutes = () => ({
@@ -47,16 +48,36 @@ const authroutes = () => ({
   ],
 });
 
-const bookingsroutes = (routes: RouteType[]) => {
-  return {
-    element: <BookingLayout />,
-    children: routes.map(({ Element, ErrorBoundary, ...rest }) => ({
-      ...rest,
-      element: getRouteElement(rest.path, Element),
-      ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
-    })),
-  };
+const nestedroutes = (routes: RouteType[]) => {
+  const routemap: Record<string, RouteType> = {};
+
+  for (const route of routes) {
+    const pathSegments = route.path.split("/");
+
+    let currentPath = "";
+
+    for (let i = 0; i < pathSegments.length; i++) {
+      const pathSegment = pathSegments[i];
+      currentPath = currentPath ? `${currentPath}/${pathSegment}` : pathSegment;
+
+      if (!routemap[currentPath]) {
+        routemap[currentPath] = {
+          ...route,
+          path: currentPath,
+          children: [],
+        };
+      }
+
+      if (i > 0) {
+        const parentPath = currentPath.replace(new RegExp(`/${pathSegment}$`), "");
+        routemap[parentPath]?.children?.push(routemap[currentPath]);
+      }
+    }
+  }
+
+  return Object.values(routemap).filter((route) => !route.path.includes("/"));
 };
+
 const getRouteElement = (path: string, Element: React.ComponentType): JSX.Element => {
   const isProtectedFile = path.split("/").includes("create") || path.split("/").includes("edit");
   if (isProtectedFile) {
@@ -78,40 +99,48 @@ const getRouteElement = (path: string, Element: React.ComponentType): JSX.Elemen
   );
 };
 
-const transformPath = (filename: string): string => {
-  if (filename === "index") return "/";
+const transformPath = (filePath: string): string => {
+  let match = filePath.match(/\.\/pages\/(.*)\.tsx$/);
+  if (!match) return "";
 
-  return filename.includes("$")
-    ? filename.replace("$", ":").toLowerCase()
-    : filename.replace(/\/index/, "").toLowerCase();
+  let filename = match[1];
+
+  // Replace special characters and handle nested folder
+  return filename
+    .replace(/\/index$/, "") // remove `/index` from the end of the path
+    .replace(/\$/g, ":") // replace `$` with `:` for dynamic routes
+    .toLowerCase();
 };
 
 export const router = () => {
   const pages: PagesTypes = import.meta.glob("../pages/**/*.tsx", { eager: true });
 
-  const routes: RouteType[] = [];
+  const routes: RouteType[] = Object.keys(pages).map((filePath) => {
+    const path = transformPath(filePath);
 
-  Object.keys(pages).reduce<RouteType[]>((acc, path) => {
-    let filename = path.match(/\.\/pages\/(.*)\.tsx$/)?.[1];
-
-    if (!filename) return acc;
-
-    const pathname = transformPath(filename);
-
-    routes.push({
-      path: pathname,
+    return {
+      path,
       Element: pages[path]?.default,
       loader: pages[path]?.loader,
       action: pages[path]?.action,
       ErrorBoundary: pages[path]?.ErrorBoundary,
-    });
+    };
+  });
 
-    return acc;
-  }, []);
+  const bookingsroutes = {
+    element: <BookingLayout />,
+    children: nestedroutes(
+      routes.map(({ Element, ErrorBoundary, ...rest }) => ({
+        ...rest,
+        element: getRouteElement(rest.path, Element),
+        ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
+      })),
+    ),
+  };
 
   console.log(routes);
 
-  const router = createBrowserRouter([authroutes(), bookingsroutes(routes)]);
+  const router = createBrowserRouter([authroutes(), bookingsroutes]);
 
   return router;
 };
