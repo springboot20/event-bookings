@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export const classNames = (...classes: (string | boolean)[]) => {
   return classes.filter(Boolean).join(" ");
 };
@@ -8,10 +10,17 @@ export enum AcceptedPersmissonRoles {
 }
 
 export const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('en-US', {
-    currency: 'USD',
-    style: 'currency',
+  return new Intl.NumberFormat("en-US", {
+    currency: "USD",
+    style: "currency",
   }).format(price);
+};
+
+export const formatDate = (date: string) => {
+  const _date = new Date(date);
+  const formattedDate = format(_date, "dd-MMM-yyyy");
+
+  return formattedDate;
 };
 
 export const isBrowser = typeof window !== "undefined";

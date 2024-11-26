@@ -13,7 +13,8 @@ export const FeaturedEventCard = (event: EventInterface) => {
           <img src={event?.image?.url} alt="" className="h-full w-full object-cover" />
         </header>
         <div className="mt-2 space-y-3">
-          <h3 className="text-base text-gray-800 font-medium">{event.title}</h3>
+          <h3 className="text-lg text-gray-800 font-semibold">{event.title}</h3>
+          <p className="text-sm text-gray-800 font-normal">{event.description}</p>
           <div className="flex w-full justify-end">
             <button
               className="text-indigo-800 font-semibold text-sm"

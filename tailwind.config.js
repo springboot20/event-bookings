@@ -13,7 +13,7 @@ export default {
         ...defaultTheme.screens,
       },
       fontFamily: {
-        lato: '"Lato", sans-serif',
+        poppins: ['"Poppins", sans-serif'],
       },
       backgroundImage: {
         "auth-nav-bg-lg": "url(../src/assets/bg-sidebar-desktop.svg)",

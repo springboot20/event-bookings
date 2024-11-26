@@ -1,9 +1,15 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+  CalendarDaysIcon,
+  MagnifyingGlassIcon,
+  MapPinIcon,
+  PlusIcon,
+  BookmarkIcon
+} from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { EventSkeletonLoading } from "../../components/loaders/SkeletonLoader";
-import { AcceptedPersmissonRoles, formatPrice } from "../../util";
+import { AcceptedPersmissonRoles, formatDate, formatPrice } from "../../util";
 import { useGetAllEventsQuery } from "../../features/event/event.slice";
 import { EventInterface } from "../../types/events";
 import { toast } from "react-toastify";
@@ -106,23 +112,47 @@ const Events = () => {
             <motion.div
               layout
               key={event._id}
-              className="bg-white border rounded-xl h-fit md:max-w-sm w-full cursor-pointer  overflow-hidden"
-              role="button"
-              onClick={() => navigate(`/events/${event._id}`)}
+              className="bg-white border rounded-xl h-fit md:max-w-sm w-full overflow-hidden"
             >
               <header className="rounded-xl h-40 w-full ">
-                <img src={event?.image?.url} alt="" className="h-full w-full object-cover" />
+                <img
+                  src={event?.image?.url}
+                  alt=""
+                  className="h-full w-full object-cover object-top"
+                />
               </header>
-              <div className="mt-2 space-y-3 p-4 ">
+              <div className="mt-2 space-y-3 p-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base text-gray-800 font-bold">{event.title}</h3>
-                  <p className="text-base text-gray-700 font-semibold italic">
-                    {formatPrice(event.price)}
-                  </p>
+                  <h3 className="text-lg text-gray-900 font-semibold hover:underline">
+                    <Link to={`/events/${event._id}`}>
+                    {event.title}
+                    </Link>
+                  </h3>
+                  <p className="text-sm text-gray-700 font-medium">{formatPrice(event.price)}</p>
                 </div>
-                <p className="text-base sm:text-lg font-medium text-gray-700">
-                  {event.description}
-                </p>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-x-3 flex items-center">
+                    <MapPinIcon className="size-4" />
+                    <span className="text-base text-gray-800 font-medium">{event.location}</span>
+                  </div>
+
+                  <div className="space-x-3 flex items-center">
+                    <span className="text-sm text-gray-800 font-normal">
+                      {formatDate(event.eventDate)}
+                    </span>
+                    <CalendarDaysIcon className="size-4" />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <button className='flex items-center space-x-3 px-4 py-1.5 rounded-3xl border hover:bg-gray-100 bg-gray-50 '>
+                    <BookmarkIcon className="size-4" />
+                    <span className="text-sm font-normal capitalize">
+                    bookmark
+                    </span>
+                  </button>
+                </div>
+                
               </div>
             </motion.div>
           ))
