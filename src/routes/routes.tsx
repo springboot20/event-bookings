@@ -108,9 +108,6 @@ export const router = () => {
 
     return acc;
   }, []);
-
-  console.log(routes);
-
   const router = createBrowserRouter([authroutes(), bookingsroutes(routes)]);
 
   return router;

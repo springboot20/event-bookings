@@ -1,9 +1,11 @@
+import { UserInterface } from "./user";
+
 export interface EventInterface {
   _id: string;
   title: string;
   description: string;
   price: number;
-  owner: string;
+  owner: UserInterface;
   location: string;
   eventDate: string;
   image: {
@@ -15,7 +17,7 @@ export interface EventInterface {
     to: string;
   };
   capacity: number;
-  category: string | CategoryInterface;
+  category: CategoryInterface;
 }
 
 export interface CategoryInterface {

@@ -5,7 +5,7 @@ import {
   MagnifyingGlassIcon,
   MapPinIcon,
   PlusIcon,
-  BookmarkIcon
+  BookmarkIcon,
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { EventSkeletonLoading } from "../../components/loaders/SkeletonLoader";
@@ -111,7 +111,7 @@ const Events = () => {
           events?.docs?.map((event: EventInterface) => (
             <motion.div
               layout
-              key={event._id}
+              key={event?._id}
               className="bg-white border rounded-xl h-fit md:max-w-sm w-full overflow-hidden"
             >
               <header className="rounded-xl h-40 w-full ">
@@ -124,40 +124,37 @@ const Events = () => {
               <div className="mt-2 space-y-3 p-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg text-gray-900 font-semibold hover:underline">
-                    <Link to={`/events/${event._id}`}>
-                    {event.title}
-                    </Link>
+                    <Link to={`/events/${event?._id}`}>{event?.title}</Link>
                   </h3>
-                  <p className="text-sm text-gray-700 font-medium">{formatPrice(event.price)}</p>
+                  <p className="text-sm text-gray-700 font-medium">{formatPrice(event?.price)}</p>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="space-x-3 flex items-center">
                     <MapPinIcon className="size-4" />
-                    <span className="text-base text-gray-800 font-medium">{event.location}</span>
+                    <span className="text-base text-gray-800 font-medium">{event?.location}</span>
                   </div>
 
                   <div className="space-x-3 flex items-center">
                     <span className="text-sm text-gray-800 font-normal">
-                      {formatDate(event.eventDate)}
+                      {formatDate(event?.eventDate)}
                     </span>
                     <CalendarDaysIcon className="size-4" />
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <button className='flex items-center space-x-3 px-4 py-1.5 rounded-3xl border hover:bg-gray-100 bg-gray-50 '>
+                  <button className="flex items-center space-x-3 px-4 py-1.5 rounded-3xl border hover:bg-gray-100 bg-gray-50 ">
                     <BookmarkIcon className="size-4" />
-                    <span className="text-sm font-normal capitalize">
-                    bookmark
-                    </span>
+                    <span className="text-sm font-normal capitalize">bookmark</span>
                   </button>
                 </div>
-                
               </div>
             </motion.div>
           ))
-        ) : (
+        ) : searchQuery ? (
           <p className="text-base font-medium text-gray-500">No event found with {searchQuery}</p>
+        ) : (
+          <EventSkeletonLoading cardsNumber={8} />
         )}
       </motion.div>
       {events?.length && (
