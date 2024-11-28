@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { isValid, parseISO, format } from "date-fns";
 
 export const classNames = (...classes: (string | boolean)[]) => {
   return classes.filter(Boolean).join(" ");
@@ -16,11 +16,36 @@ export const formatPrice = (price: number) => {
   }).format(price);
 };
 
-export const formatDate = (date: string) => {
-  const _date = new Date(date);
-  const formattedDate = format(_date, "dd-MMM-yyyy");
+export const formatDateTime = (date: string) => {
+  try {
+    const _date = parseISO(date);
 
-  return formattedDate;
+    if (!isValid(_date)) {
+      console.error("Invalid date:", date);
+      return "Invalid Date";
+    }
+
+    return format(_date, "hh:mm a");
+  } catch (error) {
+    console.error("Error parsing date:", date, error);
+    return "Invalid Date";
+  }
+};
+
+export const formatDate = (date: string) => {
+  try {
+    const _date = parseISO(date);
+
+    if (!isValid(_date)) {
+      console.error("Invalid date:", date);
+      return "Invalid Date";
+    }
+
+    return format(_date, "dd-MMM-yyyy");
+  } catch (error) {
+    console.error("Error parsing date:", date, error);
+    return "Invalid Date";
+  }
 };
 
 export const isBrowser = typeof window !== "undefined";
