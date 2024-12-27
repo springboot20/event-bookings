@@ -1,15 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { LocalStorage } from "../../util";
-import { EventInterface } from "../../types/events";
-import { EventApiSlice } from "./event.slice";
+import { createSlice } from '@reduxjs/toolkit';
+import { LocalStorage } from '../../util';
+import { EventInterface } from '../../types/events';
+import { EventApiSlice } from './event.slice';
 
 const initialState = {
-  events: LocalStorage.get("events") as EventInterface[],
-  event: LocalStorage.get("event") as EventInterface,
+  events: LocalStorage.get('events') as EventInterface[],
+  event: LocalStorage.get('event') as EventInterface,
 };
 
 export const eventSlice = createSlice({
-  name: "event",
+  name: 'event',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -18,10 +18,12 @@ export const eventSlice = createSlice({
       (state, { payload }) => {
         const { data } = payload;
 
-        state.events = data.events;
+        console.log(data);
 
-        LocalStorage.set("events", data.events);
-      },
+        state.events = data.docs;
+
+        LocalStorage.set('events', data.docs);
+      }
     );
 
     builder.addMatcher(
@@ -31,8 +33,8 @@ export const eventSlice = createSlice({
 
         state.event = data.event;
 
-        LocalStorage.set("event", data.event);
-      },
+        LocalStorage.set('event', data.event);
+      }
     );
   },
 });

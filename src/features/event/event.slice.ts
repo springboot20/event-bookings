@@ -36,9 +36,9 @@ export const EventApiSlice = ApiService.injectEndpoints({
       query: ({ limit = 10, page = 1, featured = false, title = '' }) =>
         `/events?limit=${limit}&page=${page}&featured=${featured}&title=${title}`,
       providesTags: (result) =>
-        result?.data?.events.length
+        result?.data?.docs.length
           ? [
-              ...(result.data?.events || []).map((e: EventInterface) => ({
+              ...(result.data?.docs || []).map((e: EventInterface) => ({
                 type: 'Event' as const,
                 id: e._id,
               })),
