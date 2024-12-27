@@ -27,26 +27,26 @@ export const EventModal = ({
         <div className="flex min-h-full items-center justify-center">
           <DialogPanel
             as="div"
-            className="bg-white border rounded-xl max-w-sm w-full p-4 h-[32rem]"
+            className="bg-white border rounded-xl max-w-sm w-full p-4 h-auto"
             role="button"
           >
             <header className="rounded-xl overflow-hidden h-64 border w-full bg-white">
               <img src={event?.image?.url} alt="" />
             </header>
-            <div className="mt-2 h-44">
-              <h3 className="text-lg text-gray-800 font-semibold">{event?.title}</h3>
+            <div className="mt-2 h-auto">
+              <h3 className="text-lg text-gray-800 font-medium">{event?.title}</h3>
               <div className="space-y-5 self-end mt-2">
                 <p className="text-xs sm:text-base text-gray-700">{event.description}</p>
                 <div className="space-y-2">
                   <button
                     onClick={() => navigate(`/events/${event._id}`)}
-                    className="w-full text-center py-1.5 px-3 rounded-md bg-[#FFF1A8] text-[#3D3D3D] text-sm border font-semibold"
+                    className="w-full text-center py-1.5 px-3 rounded-md bg-[#FFF1A8] text-[#3D3D3D] text-sm border font-medium"
                   >
                     Go to Event
                   </button>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="w-full text-center py-1.5 px-3 rounded-md bg-[#FFE2D9] text-[#3D3D3D] text-sm border font-semibold"
+                    className="w-full text-center py-1.5 px-3 rounded-md bg-red-100 text-[#3D3D3D] text-sm border font-medium"
                   >
                     Close
                   </button>

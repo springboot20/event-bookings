@@ -32,9 +32,9 @@ const Event: React.FC = () => {
             event?.image?.url && 'border border-gray-300'
           )}>
           {event?.image?.url !== null ? (
-            <Skeleton className='!-mt-2 relative h-72 w-full border border-gray-300 appearance-none' />
-          ) : (
             <img src={event?.image?.url} alt='' className='h-full w-full object-cover' />
+          ) : (
+            <Skeleton className='!-mt-2 relative h-72 w-full border border-gray-300 appearance-none' />
           )}
         </header>
 
@@ -74,7 +74,7 @@ const Event: React.FC = () => {
             <MapPinIcon className='h-4 text-gray-800' />
             <p className='space-x-2 text-base'>
               <span className='capitalize font-medium text-gray-500'>venue:</span>
-              <span>{event?.location}</span>
+              <span className='capitalize font-normal text-gray-500'>{event?.location}</span>
             </p>
           </div>
         </div>
@@ -82,7 +82,7 @@ const Event: React.FC = () => {
         <div className='flex items-center flex-col sm:flex-row sm:justify-between'>
           <div className='flex items-center space-x-3 mt-4'>
             <span className='flex items-center justify-center'>
-              <ClockIcon className='size-8 text-gray-500' />
+              <ClockIcon className='size-8 text-gray-500' strokeWidth={0.8} />
             </span>
 
             <div className=''>
@@ -114,10 +114,11 @@ const Event: React.FC = () => {
                 height='22'
                 viewBox='0 0 11 22'
                 fill='none'
+                strokeWidth={0.8}
                 xmlns='http://www.w3.org/2000/svg'>
                 <path
                   d='M5.92141 9.65555C3.46857 8.93444 2.67976 8.18889 2.67976 7.02778C2.67976 5.69556 3.77112 4.76667 5.59725 4.76667C7.52063 4.76667 8.23379 5.80556 8.29862 7.33333H10.6866C10.611 5.23111 9.47642 3.3 7.21807 2.67667V0H3.97642V2.64C1.88016 3.15333 0.194499 4.69333 0.194499 7.05222C0.194499 9.87556 2.25835 11.2811 5.27308 12.1C7.97446 12.8333 8.51473 13.9089 8.51473 15.0456C8.51473 15.8889 7.98526 17.2333 5.59725 17.2333C3.37132 17.2333 2.49607 16.1089 2.37721 14.6667H0C0.129666 17.3433 1.90177 18.8467 3.97642 19.3478V22H7.21807V19.3722C9.32515 18.92 11 17.5389 11 15.0333C11 11.5622 8.37426 10.3767 5.92141 9.65555Z'
-                  fill='black'
+                  fill='rgb(107 114 128)'
                 />
               </svg>
             </span>

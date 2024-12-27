@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import { Pagination } from '../../components/Pagination';
 import { useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
+import Skeleton from 'react-loading-skeleton';
 
 const Events = () => {
   const navigate = useNavigate();
@@ -107,18 +108,22 @@ const Events = () => {
         className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4 gap-5'>
         {isLoading ? (
           <EventSkeletonLoading cardsNumber={8} />
-        ) : events && events?.length ? (
+        ) : events?.length ? (
           events?.map((event: EventInterface) => (
             <motion.div
               layout
               key={event?._id}
-              className='bg-white border rounded-xl h-fit md:max-w-sm w-full overflow-hidden'>
-              <header className='rounded-xl h-40 w-full '>
-                <img
-                  src={event?.image?.url}
-                  alt=''
-                  className='h-full w-full object-cover object-top'
-                />
+              className='bg-white rounded-xl border h-fit md:max-w-sm w-full overflow-hidden'>
+              <header className='h-40 w-full '>
+                {event?.image?.url === null ? (
+                  <Skeleton className='h-full w-full -top-1' />
+                ) : (
+                  <img
+                    src={event?.image?.url}
+                    alt=''
+                    className='h-full w-full object-cover object-top'
+                  />
+                )}
               </header>
               <div className='mt-2 space-y-3 p-4'>
                 <div className='flex items-center justify-between'>
