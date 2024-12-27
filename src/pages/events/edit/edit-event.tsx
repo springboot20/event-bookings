@@ -52,7 +52,7 @@ const handleLocationChecker = (
   }
 };
 
-const EditEventForm = () => {
+const EditEvent = () => {
   const [createEvent, { isLoading }] = useCreateEventMutation();
   const { data } = useGetAllCategoriesQuery();
   const navigate = useNavigate();
@@ -408,4 +408,4 @@ const EditEventForm = () => {
   );
 };
 
-export default EditEventForm;
+export default EditEvent;

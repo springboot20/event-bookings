@@ -1,29 +1,17 @@
-import BookingLayout from "../layout/BookingLayout";
-import { PublicRoute } from "../components/PublicRoute";
-import AuthLayout from "../layout/AuthLayout";
-import Login from "../pages/login";
-import Register from "../pages/register";
-import { PrivateRoute } from "../components/PrivateRoute";
-import { AcceptedPersmissonRoles } from "../util";
-import { createBrowserRouter, Navigate } from "react-router-dom";
-
-type PagesTypes = Record<
-  string,
-  {
-    default: React.ComponentType;
-    loader?: () => Promise<any>;
-    action?: () => Promise<any>;
-    ErrorBoundary: React.ComponentType;
-  }
->;
-
-type RouteType = {
-  Element: React.ComponentType;
-  path: string;
-  loader?: () => Promise<any>;
-  action?: () => Promise<any>;
-  ErrorBoundary: React.ComponentType;
-};
+import BookingLayout from '../layout/BookingLayout';
+import { PublicRoute } from '../components/PublicRoute';
+import AuthLayout from '../layout/AuthLayout';
+import Login from '../pages/login';
+import Register from '../pages/register';
+import { PrivateRoute } from '../components/PrivateRoute';
+import { AcceptedPersmissonRoles } from '../util';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import Events from '../pages/events';
+import EditEvent from '../pages/events/edit/edit-event';
+import Event from '../pages/events/event';
+import BookingHome from '../pages';
+import Seats from '../pages/events/event/seats';
+import CreateEvent from '../pages/events/create-event';
 
 const authroutes = () => ({
   element: (
@@ -33,82 +21,91 @@ const authroutes = () => ({
   ),
   children: [
     {
-      path: "login",
+      path: 'login',
       element: <Login />,
     },
     {
-      path: "register",
+      path: 'register',
       element: <Register />,
     },
     {
-      path: "logout",
-      element: <Navigate to={"/login"} replace state={{ path: window.location.pathname }} />,
+      path: 'logout',
+      element: <Navigate to={'/login'} replace state={{ path: window.location.pathname }} />,
     },
   ],
 });
 
-const bookingsroutes = (routes: RouteType[]) => {
+const bookingsroutes = () => {
   return {
+    path: '/',
     element: <BookingLayout />,
-    children: routes.map(({ Element, ErrorBoundary, ...rest }) => ({
-      ...rest,
-      element: getRouteElement(rest.path, Element),
-      ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
-    })),
+    children: [
+      {
+        index: true,
+        element: (
+          <PublicRoute>
+            <BookingHome />
+          </PublicRoute>
+        ),
+      },
+      {
+        path: 'events',
+        children: [
+          {
+            index: true,
+            element: (
+              <PrivateRoute roles={[AcceptedPersmissonRoles.USER, AcceptedPersmissonRoles.ADMIN]}>
+                <Events />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: 'create-event',
+            element: (
+              <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
+                <CreateEvent />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: ':eventId',
+            children: [
+              {
+                index: true,
+                element: (
+                  <PrivateRoute
+                    roles={[AcceptedPersmissonRoles.USER, AcceptedPersmissonRoles.ADMIN]}>
+                    <Event />
+                  </PrivateRoute>
+                ),
+              },
+              {
+                path: 'edit-event',
+                element: (
+                  <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
+                    <EditEvent />
+                  </PrivateRoute>
+                ),
+              },
+              {
+                path: 'seats',
+                element: (
+                  <PrivateRoute
+                    roles={[AcceptedPersmissonRoles.ADMIN, AcceptedPersmissonRoles.USER]}>
+                    <Seats />
+                  </PrivateRoute>
+                ),
+              },
+            ],
+          },
+        ],
+      },
+    ],
   };
-};
-const getRouteElement = (path: string, Element: React.ComponentType): JSX.Element => {
-  const isProtectedFile = path.split("/").includes("create") || path.split("/").includes("edit");
-  if (isProtectedFile) {
-    return (
-      <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
-        <Element />
-      </PrivateRoute>
-    );
-  }
-
-  if (path === "/") {
-    return <Element />;
-  }
-
-  return (
-    <PrivateRoute roles={[AcceptedPersmissonRoles.USER, AcceptedPersmissonRoles.ADMIN]}>
-      <Element />
-    </PrivateRoute>
-  );
-};
-
-const transformPath = (filename: string): string => {
-  if (filename === "index") return "/";
-
-  return filename.includes("$")
-    ? filename.replace("$", ":").toLowerCase()
-    : filename.replace(/\/index/, "").toLowerCase();
 };
 
 export const router = () => {
-  const pages: PagesTypes = import.meta.glob("../pages/**/*.tsx", { eager: true });
-
-  const routes: RouteType[] = [];
-
-  Object.keys(pages).reduce<RouteType[]>((acc, path) => {
-    let filename = path.match(/\.\/pages\/(.*)\.tsx$/)?.[1];
-
-    if (!filename) return acc;
-
-    const pathname = transformPath(filename);
-
-    routes.push({
-      path: pathname,
-      Element: pages[path]?.default,
-      loader: pages[path]?.loader,
-      action: pages[path]?.action,
-      ErrorBoundary: pages[path]?.ErrorBoundary,
-    });
-
-    return acc;
-  }, []);
-  const router = createBrowserRouter([authroutes(), bookingsroutes(routes)]);
+  const router = createBrowserRouter([authroutes(), bookingsroutes()]);
 
   return router;
 };

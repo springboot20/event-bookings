@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useGetEventByIdQuery } from '../../features/event/event.slice';
-import { EventInterface } from '../../types/events';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetEventByIdQuery } from '../../../features/event/event.slice';
+import { EventInterface } from '../../../types/events';
 import { toast } from 'react-toastify';
 import { ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
-import UserAvatar from '../../assets/user-avatar.png';
-import { classNames, formatDate, formatDateTime, formatPrice } from '../../util';
+import UserAvatar from '../../../assets/user-avatar.png';
+import { classNames, formatDate, formatDateTime, formatPrice } from '../../../util';
 import Skeleton from 'react-loading-skeleton';
 
 const Event: React.FC = () => {
-  const { id } = useParams();
-  const { data } = useGetEventByIdQuery(id!);
+  const { eventId } = useParams();
+  const { data } = useGetEventByIdQuery(eventId!);
+  const navigate = useNavigate();
 
   const event = data?.data as EventInterface;
   const message = data?.message;
@@ -124,6 +125,15 @@ const Event: React.FC = () => {
             </span>
           </div>
         </div>
+
+        <button
+          type='button'
+          onClick={() => {
+            navigate(`/events/${event?._id}/seats`);
+          }}
+          className='mt-10 px-4 w-fit text-center py-1.5 rounded-3xl border hover:bg-gray-50 bg-white'>
+          <span className='text-sm font-normal capitalize'>resererve a seat</span>
+        </button>
       </div>
     </div>
   );

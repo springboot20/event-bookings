@@ -4,9 +4,9 @@ import { useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
 
 export const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tokens, user } = useAppSelector((state: RootState) => state.auth);
+  const { tokens, isAuthenticated } = useAppSelector((state: RootState) => state.auth);
 
-  if (tokens && user?._id) return <Navigate to={'/'} />;
+  if (tokens && isAuthenticated) return <Navigate to={'/'} />;
 
   return children;
 };
