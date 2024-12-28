@@ -7,7 +7,6 @@ import { ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import UserAvatar from '../../../assets/user-avatar.png';
 import { classNames, formatDate, formatDateTime, formatPrice } from '../../../util';
 import Skeleton from 'react-loading-skeleton';
-import { Loader } from '../../../components/loaders/Loader';
 
 const Event: React.FC = () => {
   const { eventId } = useParams();
@@ -26,7 +25,19 @@ const Event: React.FC = () => {
   return (
     <div className='py-4 mx-auto flex flex-col max-w-5xl gap-5'>
       {isLoading ? (
-        <Loader/>
+        <div className='flex items-center justify-center space-x-3 h-[calc(100vh-5rem)]'>
+          <div aria-label='Loading...' role='status'>
+            <svg className='h-7 w-7 animate-spin' viewBox='3 3 18 18'>
+              <path
+                className='fill-white'
+                d='M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z'></path>
+              <path
+                className='fill-[#4632A8]'
+                d='M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z'></path>
+            </svg>
+          </div>
+          <span className='text-sm font-medium text-gray-500'>loading event...</span>
+        </div>
       ) : (
         <>
           <div className='w-full bg-white rounded-md p-4 col-span-full lg:col-span-1'>
@@ -49,7 +60,7 @@ const Event: React.FC = () => {
           </div>
 
           <div className='col-span-full lg:col-span-1 xl:col-span-2'>
-            <div className='flex items-center flex-col sm:flex-row sm:justify-between'>
+            <div className='flex flex-col xs:items-center xs:flex-row xs:justify-between gap-2'>
               <div className='flex items-center space-x-2'>
                 {!event?.owner?.avatar?.url ? (
                   <span className='size-10 rounded-full block bg-red-300 border border-white'>
@@ -68,34 +79,34 @@ const Event: React.FC = () => {
                     />
                   </span>
                 )}
-                <p className='space-x-2 text-base'>
+                <p className='space-x-1 text-sm'>
                   <span className='capitalize font-medium text-gray-500'>owner:</span>
-                  <span className='capitalize'>{event?.owner?.username}</span>
+                  <span className='capitalize font-normal text-gray-500'>{event?.owner?.username}</span>
                 </p>
               </div>
 
-              <div className='flex items-center space-x-2'>
+              <div className='flex items-center space-x-0.5'>
                 <MapPinIcon className='h-4 text-gray-800' />
-                <p className='space-x-2 text-base'>
+                <p className='space-x-1 text-sm'>
                   <span className='capitalize font-medium text-gray-500'>venue:</span>
                   <span className='capitalize font-normal text-gray-500'>{event?.location}</span>
                 </p>
               </div>
             </div>
 
-            <div className='flex items-center flex-col sm:flex-row sm:justify-between'>
-              <div className='flex items-center space-x-3 mt-4'>
+            <div className='flex flex-col xs:items-center xs:flex-row xs:justify-between gap-2 mt-2 xs:mt-4'>
+              <div className='flex items-center space-x-1.5'>
                 <span className='flex items-center justify-center'>
                   <ClockIcon className='size-8 text-gray-500' strokeWidth={0.8} />
                 </span>
 
                 <div className=''>
-                  <p className='space-x-2 text-base text-gray-500'>
+                  <p className='space-x-1 text-sm text-gray-500'>
                     <span className='capitalize font-medium text-gray-500'>date:</span>
                     <span>{formatDate(event?.eventDate)}</span>
                   </p>
 
-                  <p className='space-x-2 text-base text-gray-500'>
+                  <p className='space-x-1 text-sm text-gray-500'>
                     <span className='capitalize font-medium text-gray-500'>time:</span>
                     <span>
                       {formatDateTime(event?.time?.from)} - {formatDateTime(event?.time?.to)}
@@ -104,8 +115,8 @@ const Event: React.FC = () => {
                 </div>
               </div>
 
-              <div className='flex items-center space-x-3 mt-4'>
-                <p className='space-x-2 text-base flex items-start text-gray-500'>
+              <div className='flex items-center space-x-3'>
+                <p className='space-x-1 text-sm flex items-start text-gray-500'>
                   <span className='capitalize font-medium'>price:</span>
                   <span className='flex flex-col -space-y-1'>
                     <small className='capitalize'>{formatPrice(event?.price)}</small>

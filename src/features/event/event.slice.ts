@@ -15,16 +15,58 @@ interface EventQuery {
 export interface EventMutation {
   [key: string]: any;
 }
+/**
+ * const [toHours, toMinutes] = evt.target.value.split(':').map(Number);
+
+                      const toDate = new Date(eventDate);
+                      toDate.setHours(toHours, toMinutes);
+
+                      setFieldValue('to', toDate.toISOString());
+ * 
+ * 
+ * const [fromHours, fromMinutes] = evt.target.value.split(':').map(Number);
+                       const fromDate = new Date(values.eventDate);
+                       fromDate.setHours(fromHours, fromMinutes);
+                       console.log(fromDate)
+                       setFieldValue('from', fromDate);
+ */
 
 export const EventApiSlice = ApiService.injectEndpoints({
   endpoints: (builder) => ({
     createEvent: builder.mutation<Response, EventMutation>({
-      query: (data) => ({
-        url: '/events',
-        method: 'POST',
-        body: data,
-        formData: true,
-      }),
+      query: (data) => {
+        const formData = new FormData();
+
+        Object.keys(data).forEach((key) => {
+          const eventDate = new Date(data['eventDate']);
+
+          if (key === 'image' && data[key]) {
+            formData.append(key, data[key]);
+          } else if (key === 'from' && data[key]) {
+            const [fromHours, fromMinutes] = data[key].split(':').map(Number);
+            const fromDate = new Date(eventDate);
+            fromDate.setHours(fromHours, fromMinutes);
+            formData.append(key, fromDate.toISOString());
+          } else if (key === 'to' && data[key]) {
+            const [toHours, toMinutes] = data[key].split(':').map(Number);
+            const toDate = new Date(eventDate);
+            toDate.setHours(toHours, toMinutes);
+            formData.append(key, toDate.toISOString());
+          } else if (Array.isArray(data[key]) || typeof data[key] === 'object') {
+            formData.append(key, JSON.stringify(data[key]));
+          } else {
+            formData.append(key, data[key]);
+          }
+        });
+
+        console.log(data);
+
+        return {
+          url: '/events',
+          method: 'POST',
+          body: formData,
+        };
+      },
     }),
 
     getEventById: builder.query<Response, string>({
