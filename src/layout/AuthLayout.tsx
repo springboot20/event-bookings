@@ -1,17 +1,28 @@
-import { Outlet } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Outlet } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import MobileImage from '../assets/bg-sidebar-mobile.svg';
+import DesktopImage from '../assets/bg-sidebar-desktop.svg';
 
 const AuthLayout = () => {
   return (
-    <div className="flex items-stretch flex-col lg:justify-between lg:flex-row flex-shrink-0 overflow-hidden">
-      <motion.nav
-        className="lg:max-w-lg h-72 lg:h-screen relative bg-auth-nav-bg-sm lg:bg-auth-nav-bg-lg bg-no-repeat bg-cover"
-      >
-        <motion.div className="p-4 relative">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae quibusdam excepturi
-          dolore illo earum voluptatum porro totam quod. Doloribus, cupiditate obcaecati praesentium
-          corporis sequi esse non ipsa delectus! Suscipit, id.
-        </motion.div>
+    <div className='flex items-stretch flex-col lg:justify-between lg:flex-row flex-shrink-0 overflow-hidden'>
+      <motion.nav className='lg:max-w-lg h-72 lg:h-screen relative'>
+        <img
+          src={MobileImage}
+          className='absolute inset-0 object-cover h-full w-full lg:hidden'
+          alt='mobile background'
+        />
+
+        <div className='relative z-10'>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates, consequatur
+          distinctio! Architecto tempora dignissimos laudantium veniam nostrum mollitia provident.
+          Incidunt?
+        </div>
+        <img
+          src={DesktopImage}
+          className='absolute inset-0 object-cover !h-full w-full hidden lg:block'
+          alt='desktop background'
+        />
       </motion.nav>
       <motion.div
         initial={{
@@ -22,8 +33,7 @@ const AuthLayout = () => {
           scale: 1,
           rotate: 0,
         }}
-        className="lg:w-[calc(100%-32rem] flex-1 flex-shrink-0 p-2 xl:p-0"
-      >
+        className='lg:w-[calc(100%-32rem] flex-1 flex-shrink-0 z-20 px-2 xl:px-0'>
         <Outlet />
       </motion.div>
     </div>

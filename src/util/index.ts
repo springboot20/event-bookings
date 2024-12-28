@@ -6,6 +6,7 @@ export const classNames = (...classes: (string | boolean)[]) => {
 
 export enum AcceptedPersmissonRoles {
   ADMIN = 'ADMIN',
+  MODERATOR = 'MODERATOR',
   USER = 'USER',
 }
 

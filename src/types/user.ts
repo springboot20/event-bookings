@@ -1,3 +1,5 @@
+import { AcceptedPersmissonRoles } from "../util";
+
 export interface UserInterface {
   _id: string;
   avatar: {
@@ -6,6 +8,6 @@ export interface UserInterface {
   };
   username: string;
   email: string;
-  role: string;
+  role: AcceptedPersmissonRoles;
   isEmailVerified: boolean;
 }

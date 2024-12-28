@@ -15,21 +15,6 @@ interface EventQuery {
 export interface EventMutation {
   [key: string]: any;
 }
-/**
- * const [toHours, toMinutes] = evt.target.value.split(':').map(Number);
-
-                      const toDate = new Date(eventDate);
-                      toDate.setHours(toHours, toMinutes);
-
-                      setFieldValue('to', toDate.toISOString());
- * 
- * 
- * const [fromHours, fromMinutes] = evt.target.value.split(':').map(Number);
-                       const fromDate = new Date(values.eventDate);
-                       fromDate.setHours(fromHours, fromMinutes);
-                       console.log(fromDate)
-                       setFieldValue('from', fromDate);
- */
 
 export const EventApiSlice = ApiService.injectEndpoints({
   endpoints: (builder) => ({
@@ -74,6 +59,14 @@ export const EventApiSlice = ApiService.injectEndpoints({
       providesTags: (_, __, id) => [{ type: 'Event', id }],
     }),
 
+    deleteEvent: builder.mutation<Response, string>({
+      query: (eventId) => ({
+        url: `/events/${eventId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (_, __, eventId) => [{ type: 'Event', eventId }],
+    }),
+
     getAllEvents: builder.query<Response, EventQuery>({
       query: ({ limit = 10, page = 1, featured = false, title = '' }) =>
         `/events?limit=${limit}&page=${page}&featured=${featured}&title=${title}`,
@@ -110,6 +103,7 @@ export const {
   useCreateEventMutation,
   useGetAllEventsQuery,
   useGetEventsByCategoryQuery,
+  useDeleteEventMutation,
   useGetEventByIdQuery,
   useUpdateEventMutation,
 } = EventApiSlice;
