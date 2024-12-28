@@ -86,7 +86,7 @@ export const HeaderNavigation = () => {
                               isActive
                                 ? "text-gray-800 after:bg-indigo-600 after:scale-100"
                                 : "text-gray-600",
-                              "text-base capitalize font-semibold relative after:absolute after:scale-0 hover:after:scale-100 after:content-[''] after:w-full after:bg-indigo-400 after:h-[0.2rem] after:-bottom-1 after:transition-all after:left-0 after:right-0",
+                              "text-base capitalize font-medium relative after:absolute after:scale-0 hover:after:scale-100 after:content-[''] after:w-full after:bg-indigo-400 after:h-[0.2rem] after:-bottom-1 after:transition-all after:left-0 after:right-0",
                             )
                           }
                           aria-current={item.current ? "page" : undefined}
@@ -130,7 +130,7 @@ export const HeaderNavigation = () => {
                               to="#"
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "flex items-center gap-2 px-4 py-2 text-sm text-gray-800 font-semibold",
+                                "flex items-center gap-2 px-4 py-2 text-sm text-gray-800 font-medium",
                               )}
                             >
                               <motion.span className="flex items-center">
@@ -184,7 +184,7 @@ export const HeaderNavigation = () => {
                               to="/settings"
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "flex items-center gap-2 px-4 py-2 text-sm text-gray-800 font-semibold",
+                                "flex items-center gap-2 px-4 py-2 text-sm text-gray-800 font-medium",
                               )}
                             >
                               <motion.svg
@@ -231,7 +231,7 @@ export const HeaderNavigation = () => {
                               to="/login"
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "flex items-center gap-2 px-4 py-2 text-sm text-gray-800 font-semibold",
+                                "flex items-center gap-2 px-4 py-2 text-sm text-gray-800 font-medium",
                               )}
                             >
                               <motion.svg

@@ -12,14 +12,6 @@ import { useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
 import { EventItem } from './EventItems';
 
-const ReturnJSXElement = (events: EventInterface[], searchQuery: string) => {
-  if (events?.length) {
-    return events?.map((event: EventInterface) => <EventItem event={event} key={event?._id} />);
-  } else if (searchQuery) {
-    return <p className='text-base font-medium text-gray-500'>No event found with {searchQuery}</p>;
-  } else return <EventSkeletonLoading cardsNumber={8} />;
-};
-
 const Events = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -107,11 +99,13 @@ const Events = () => {
         className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4 gap-5'>
         {isLoading ? (
           <EventSkeletonLoading cardsNumber={8} />
+        ) : searchQuery ? (
+          <p className='text-base font-medium text-gray-500'>No event found with "{searchQuery}"</p>
         ) : (
-          ReturnJSXElement(events, searchQuery)
+          events?.map((event: EventInterface) => <EventItem event={event} key={event?._id} />)
         )}
       </motion.div>
-      {events?.length && (
+      {events?.length !== 0 && (
         <Pagination
           page={page}
           totalPages={totalPages}

@@ -1,5 +1,6 @@
 import { Seat } from './Seat';
 import { SeatInterface } from '../../types/seat';
+import { motion } from "framer-motion"
 
 export const SeatChart: React.FC<{
   seats: SeatInterface[];
@@ -7,7 +8,7 @@ export const SeatChart: React.FC<{
 }> = ({ seats, handleClick }) => {
 
   return (
-    <div className='grid place-items-center gap-1 grid-flow-col'>
+    <motion.div layout className='grid place-items-center gap-1 grid-flow-col'>
       {seats?.slice(0, 25)?.map((s: any, i: number) => {
         return (
           <Seat
@@ -52,6 +53,6 @@ export const SeatChart: React.FC<{
           />
         );
       })}
-    </div>
+    </motion.div>
   );
 };

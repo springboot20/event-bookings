@@ -1,5 +1,6 @@
 import { SeatInterface } from '../../types/seat';
 import { classNames } from '../../util';
+import { motion } from 'framer-motion';
 
 export const Seat: React.FC<{
   index: number;
@@ -11,7 +12,8 @@ export const Seat: React.FC<{
   s: SeatInterface;
 }> = ({ index, maximumColumns, maximumRows, columnStart, rowStart, s, handleClick }) => {
   return (
-    <button
+    <motion.button
+      layout
       onClick={() => handleClick(s?._id)}
       disabled={s.isReserved}
       className={classNames(
@@ -23,6 +25,6 @@ export const Seat: React.FC<{
         gridRow: `${Math.ceil((index + 1) / maximumRows) + rowStart}`,
       }}>
       {s.number}
-    </button>
+    </motion.button>
   );
 };
