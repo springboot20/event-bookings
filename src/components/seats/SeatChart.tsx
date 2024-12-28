@@ -5,8 +5,9 @@ export const SeatChart: React.FC<{
   seats: SeatInterface[];
   handleClick: (id: string) => void;
 }> = ({ seats, handleClick }) => {
+
   return (
-    <div className='grid place-items-center mt-20 gap-1 grid-flow-col'>
+    <div className='grid place-items-center gap-1 grid-flow-col'>
       {seats?.slice(0, 25)?.map((s: any, i: number) => {
         return (
           <Seat

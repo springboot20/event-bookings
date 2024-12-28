@@ -1,5 +1,5 @@
-import { SeatInterface } from "../../types/seat";
-import { classNames } from "../../util";
+import { SeatInterface } from '../../types/seat';
+import { classNames } from '../../util';
 
 export const Seat: React.FC<{
   index: number;
@@ -13,7 +13,7 @@ export const Seat: React.FC<{
   return (
     <button
       onClick={() => handleClick(s?._id)}
-      // disabled={s.isReserved}
+      disabled={s.isReserved}
       className={classNames(
         'size-7 text-xs sm:size-8 lg:size-10 rounded-full text-white border flex items-center justify-center',
         s.isReserved ? 'bg-blue-400' : 'bg-blue-700 hover:bg-blue-500 transition-colors'

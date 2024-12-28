@@ -1,54 +1,50 @@
-import { isValid, parseISO, format } from "date-fns";
+import { isValid, parseISO, format } from 'date-fns';
 
 export const classNames = (...classes: (string | boolean)[]) => {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 };
 
 export enum AcceptedPersmissonRoles {
-  ADMIN = "ADMIN",
-  USER = "USER",
+  ADMIN = 'ADMIN',
+  USER = 'USER',
 }
 
 export const formatPrice = (price: number) => {
-  return new Intl.NumberFormat("en-US", {
-    currency: "USD",
-    style: "currency",
+  return new Intl.NumberFormat('en-US', {
+    currency: 'USD',
+    style: 'currency',
   }).format(price);
 };
 
 export const formatDateTime = (date: string) => {
   try {
-    const _date = parseISO(date);
+    const _date = date !== undefined && parseISO(date);
 
     if (!isValid(_date)) {
-      console.error("Invalid date:", date);
-      return "Invalid Date";
+      console.error('Invalid date:', date);
     }
 
-    return format(_date, "hh:mm a");
+    return format(_date as Date, 'hh:mm a');
   } catch (error) {
-    console.error("Error parsing date:", date, error);
-    return "Invalid Date";
+    console.error('Error parsing date:', date, error);
   }
 };
 
 export const formatDate = (date: string) => {
   try {
-    const _date = parseISO(date);
+    const _date = date !== undefined && parseISO(date);
 
     if (!isValid(_date)) {
-      console.error("Invalid date:", date);
-      return "Invalid Date";
+      console.error('Invalid date:', date);
     }
 
-    return format(_date, "dd-MMM-yyyy");
+    return format(_date as Date, 'dd-MMM-yyyy');
   } catch (error) {
-    console.error("Error parsing date:", date, error);
-    return "Invalid Date";
+    console.error('Error parsing date:', date, error);
   }
 };
 
-export const isBrowser = typeof window !== "undefined";
+export const isBrowser = typeof window !== 'undefined';
 
 export class LocalStorage {
   static get(key: string) {
@@ -58,6 +54,7 @@ export class LocalStorage {
       try {
         return JSON.parse(value);
       } catch (err) {
+        console.log(err);
         return null;
       }
     }

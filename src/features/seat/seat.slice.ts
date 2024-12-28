@@ -13,26 +13,26 @@ interface SeatQuery {
 
 export const SeatApiSlice = ApiService.injectEndpoints({
   endpoints: (builder) => ({
-    getAllEventSeats: builder.query<Response, string>({
-      query: (eventId) => ({
-        url: `/seats/${eventId}`,
+    getAllEventSeats: builder.query<Response, SeatQuery>({
+      query: ({ eventId, isReserved }) => ({
+        url: `/seats?eventId=${eventId}&isReserved=${isReserved}`,
         method: 'GET',
       }),
-      // providesTags: (result) =>
-      //   result?.data?.seats.length
-      //     ? [
-      //         ...(result.data?.seats || []).map((s: any) => ({
-      //           type: 'Seat' as const,
-      //           id: s._id,
-      //         })),
-      //         { type: 'Seat', id: 'SEAT' },
-      //       ]
-      //     : [{ type: 'Seat', id: 'SEAT' }],
+      providesTags: (result) =>
+        result?.data
+          ? [
+              ...(result.data?.seats || result?.data || []).map((s: any) => ({
+                type: 'Seat' as const,
+                id: s._id,
+              })),
+              { type: 'Seat', id: 'SEAT' },
+            ]
+          : [{ type: 'Seat', id: 'SEAT' }],
     }),
 
     reserveSeatForEvent: builder.mutation<Response, SeatQuery>({
-      query: ({ seat, reservedAt }) => ({
-        url: '/seats',
+      query: ({ seat, reservedAt, eventId }) => ({
+        url: `/seats/book-seat/${eventId}`,
         method: 'POST',
         body: { seat, reservedAt },
       }),

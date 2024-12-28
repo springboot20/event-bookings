@@ -37,16 +37,11 @@ const authroutes = () => ({
 
 const bookingsroutes = () => {
   return {
-    path: '/',
     element: <BookingLayout />,
     children: [
       {
-        index: true,
-        element: (
-          <PublicRoute>
-            <BookingHome />
-          </PublicRoute>
-        ),
+        path: '/',
+        element: <BookingHome />,
       },
       {
         path: 'events',
