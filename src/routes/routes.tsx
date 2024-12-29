@@ -13,6 +13,8 @@ import BookingHome from '../pages';
 import Seats from '../pages/events/event/seats';
 import CreateEvent from '../pages/events/create-event';
 import Bookings from '../pages/bookings';
+import Settings from '../pages/settings';
+import Profile from '../pages/settings/profile/Index';
 
 const authroutes = () => ({
   element: (
@@ -47,6 +49,24 @@ const bookingsroutes = () => {
       {
         path: 'bookings',
         element: <Bookings />,
+      },
+      {
+        path: 'settings',
+        element: (
+          <PrivateRoute roles={[AcceptedPersmissonRoles.USER, AcceptedPersmissonRoles.ADMIN]}>
+            <Settings />
+          </PrivateRoute>
+        ),
+        children: [
+          {
+            path: 'profile',
+            element: <Profile />,
+          },
+          {
+            path: 'account',
+            element: <Profile />,
+          },
+        ],
       },
       {
         path: 'events',

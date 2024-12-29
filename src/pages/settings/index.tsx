@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import SettingSidebar from "../../components/navigation/SettingSideBar";
+import { Outlet } from "react-router-dom";
 
 export default function Settings() {
   const settings = {
@@ -18,20 +19,17 @@ export default function Settings() {
   };
 
   return (
-    <motion.div className="relative flex items-stretch justify-between flex-shrink-0 max-w-7xl mx-auto">
+    <motion.div className="relative flex items-stretch justify-between flex-shrink-0">
       <AnimatePresence mode="popLayout">
-        <motion.div>
-          <SettingSidebar />
-        </motion.div>
+      <SettingSidebar />
+
         <motion.div
           variants={settings}
           initial="initial"
           animate="final"
-          className="w-full relative bg-red-50 left-0 right-0 lg:left-[24rem] px-4"
+          className=" absolute lg:left-[24rem] lg:w-[calc(100%-24rem] left-0 right-0 px-4 xl:px-0 xl:pl-4"
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni, obcaecati iste, dolore,
-          eos officia quibusdam sed vitae deleniti soluta ullam iusto cum illum perspiciatis
-          repellat repellendus cupiditate. Tenetur, quas dolor.
+        <Outlet/>
         </motion.div>
       </AnimatePresence>
     </motion.div>

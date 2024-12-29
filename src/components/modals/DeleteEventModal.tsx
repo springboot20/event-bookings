@@ -72,7 +72,7 @@ export const DeleteModal: React.FC<{
                           setTimeout(() => onClose(), 2000);
                         }
                       }}
-                      className='flex items-center space-x-1.5 px-4 py-1.5 disabled:cursor-not-allowed rounded border bg-red-400 text-white'>
+                      className='flex items-center space-x-1.5 px-4 py-1.5 disabled:cursor-not-allowed rounded border bg-red-500 hover:bg-red-400 transition-colors text-white'>
                       {deleteEventLoading ? (
                         <span>deleting event...</span>
                       ) : (
@@ -86,7 +86,7 @@ export const DeleteModal: React.FC<{
                     <button
                       type='button'
                       onClick={onClose}
-                      className='flex items-center space-x-1.5 px-4 py-1.5 disabled:cursor-not-allowed rounded border bg-indigo-400 text-white'>
+                      className='flex items-center space-x-1.5 px-4 py-1.5 disabled:cursor-not-allowed rounded border bg-indigo-500 hover:bg-indigo-400 transition-colors text-white'>
                       <XCircleIcon className='h-5 w-5' />
                       <span>cancel delete</span>
                     </button>
