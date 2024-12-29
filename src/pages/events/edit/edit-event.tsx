@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeftIcon,
   CameraIcon,
@@ -10,9 +10,14 @@ import {
 import { toast } from 'react-toastify';
 
 import { classNames } from '../../../util';
-import { useCreateEventMutation } from '../../../features/event/event.slice';
+import { useUpdateEventMutation, useGetEventByIdQuery } from '../../../features/event/event.slice';
 import { useGetAllCategoriesQuery } from '../../../features/category/category.slice';
-import { CategoryInterface } from '../../../types/events';
+import { CategoryInterface, EventInterface } from '../../../types/events';
+
+type ImageType = {
+  url: string;
+  public_id: string;
+};
 
 interface InitialValues {
   title: string;
@@ -21,7 +26,7 @@ interface InitialValues {
   location: string;
   eventDate: string;
   category: string;
-  image: File | null;
+  image: File | ImageType | null;
   from: string;
   to: string;
   capacity: number;
@@ -53,8 +58,10 @@ const handleLocationChecker = (
 };
 
 const EditEvent = () => {
-  const [createEvent, { isLoading }] = useCreateEventMutation();
+  const [updateEvent, { isLoading }] = useUpdateEventMutation();
   const { data } = useGetAllCategoriesQuery();
+  const { eventId } = useParams();
+  const { data: eventData } = useGetEventByIdQuery(eventId!);
   const navigate = useNavigate();
   const [locationCoords, setLocationCoords] = useState({
     lat: 0,
@@ -62,52 +69,40 @@ const EditEvent = () => {
   });
 
   const categories = data?.data?.categories as CategoryInterface[];
+  const event: EventInterface = typeof eventData?.data === 'object' && eventData?.data;
 
-  const iniitialValues: InitialValues = {
-    capacity: 0,
-    category: '',
-    location: '',
-    eventDate: '',
-    from: '',
-    to: '',
-    description: '',
-    price: 20,
-    title: '',
-    image: null,
+  const event_date = new Date(event?.eventDate);
+  const concatenatedDate = `${event_date.getFullYear()}-${event_date.getMonth()}-${(
+    event_date.getDate() % 100
+  )
+    .toString()
+    .padStart(2, '0')}`;
+
+  const from_time = new Date(event?.time?.from);
+  const concatenatedFromTime = `${from_time.getHours()}:${from_time.getMinutes()}`;
+
+  const to_time = new Date(event?.time?.to);
+  const concatenatedToTime = `${to_time.getHours()}:${to_time.getMinutes()}`;
+
+  const initialValues: InitialValues = {
+    capacity: event?.capacity ?? 0,
+    category: event?.category?.name ?? '',
+    location: event?.location ?? '',
+    eventDate: (event?.eventDate && concatenatedDate) ?? '',
+    from: (event?.time && concatenatedFromTime) ?? '',
+    to: (event?.time && concatenatedToTime) ?? '',
+    description: event?.description ?? '',
+    price: event?.price ?? 20,
+    title: event?.title ?? '',
+    image: event?.image ?? null,
     featured: false,
     'ticket-type': '',
   };
 
+  console.log(initialValues);
+
   async function onSubmit(values: InitialValues, { resetForm }: FormikHelpers<InitialValues>) {
-    const formData = new FormData();
-
-    const [fromHours, fromMinutes] = values.from.split(':').map(Number);
-    const [toHours, toMinutes] = values.to.split(':').map(Number);
-
-    // Assuming eventDate is in YYYY-MM-DD format
-    const eventDate = new Date(values.eventDate);
-
-    const fromDate = new Date(eventDate);
-    fromDate.setHours(fromHours, fromMinutes);
-
-    const toDate = new Date(eventDate);
-    toDate.setHours(toHours, toMinutes);
-
-    formData.append('title', values.title);
-    formData.append('description', values.description);
-    formData.append('price', values.price.toString());
-    formData.append('location', values.location);
-    formData.append('eventDate', values.eventDate);
-    formData.append('category', values.category);
-    formData.append('from', fromDate.toISOString());
-    formData.append('featured', values.featured ? 'true' : 'false');
-    formData.append('to', toDate.toISOString());
-    formData.append('capacity', values.capacity.toString());
-    formData.append('image', values.image as Blob);
-
-    console.log(values.featured);
-
-    await createEvent(formData)
+    await updateEvent({ _id: eventId, ...values })
       .unwrap()
       .then((response) => {
         console.log(response);
@@ -115,8 +110,9 @@ const EditEvent = () => {
         setTimeout(() => navigate('/events'), 1200);
         resetForm();
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.log(error);
+        toast.error(error?.message || error?.data?.message);
       });
   }
 
@@ -135,11 +131,11 @@ const EditEvent = () => {
         </h2>
       </header>
 
-      <Formik initialValues={iniitialValues} onSubmit={onSubmit}>
-        {({ errors, touched, setFieldValue }) => (
+      <Formik initialValues={event && initialValues} onSubmit={onSubmit}>
+        {({ errors, touched, values, setFieldValue }) => (
           <Form className='mt-4 w-full bg-white rounded-lg p-6 max-w-xl border'>
             <fieldset className='mt-2'>
-              <label htmlFor='title' className='capitalize text-base font-medium text-gray-600'>
+              <label htmlFor='title' className='capitalize text-sm font-medium text-gray-600'>
                 event title<span className='text-red-600 text-base font-medium'>*</span>
               </label>
 
@@ -156,9 +152,7 @@ const EditEvent = () => {
             </fieldset>
 
             <fieldset className='mt-2'>
-              <label
-                htmlFor='event-date'
-                className='capitalize text-base font-medium text-gray-600'>
+              <label htmlFor='event-date' className='capitalize text-sm font-medium text-gray-600'>
                 event date<span className='text-red-600 text-base font-medium'>*</span>
               </label>
 
@@ -176,9 +170,7 @@ const EditEvent = () => {
             </fieldset>
 
             <fieldset className='mt-2'>
-              <label
-                htmlFor='event-time'
-                className='capitalize text-base font-medium text-gray-600'>
+              <label htmlFor='event-time' className='capitalize text-sm font-medium text-gray-600'>
                 event Time<span className='text-red-600 text-base font-medium'>*</span>
               </label>
 
@@ -207,7 +199,7 @@ const EditEvent = () => {
               <fieldset className='mt-2 flex-1'>
                 <label
                   htmlFor='event-time'
-                  className='capitalize text-base font-medium text-gray-600'>
+                  className='capitalize text-sm font-medium text-gray-600'>
                   Category<span className='text-red-600 text-base font-medium'>*</span>
                 </label>
                 <div className='relative mt-2'>
@@ -215,13 +207,19 @@ const EditEvent = () => {
                     as='select'
                     name='category'
                     id='category'
+                    value={values.category}
+                    onChange={(e: any) => {
+                      const selectedCategory = categories?.find((c) => c.name === e.target.value);
+
+                      setFieldValue('category', selectedCategory?.name);
+                    }}
                     className={classNames(
                       'border-0 rounded-md w-full bg-white text-gray-800 first:text-gray-600 py-3 pl-3 pr-8 leading-tight focus:outline-none ring-1 ring-inset focus:ring-2 focus:ring-inset ring-gray-300  focus:ring-indigo-600',
                       errors.category && touched.category ? 'ring-red-600' : 'focus:ring-indigo-600'
                     )}>
                     <option>select a category</option>
-                    {categories?.map((c) => (
-                      <option key={c._id} value={c._id}>
+                    {(categories ?? [])?.map((c) => (
+                      <option key={c._id} value={c.name}>
                         {c.name}
                       </option>
                     ))}
@@ -229,9 +227,7 @@ const EditEvent = () => {
                 </div>
               </fieldset>
               <fieldset className='flex items-start flex-col gap-2 mt-2'>
-                <label
-                  htmlFor='featured'
-                  className='capitalize text-base font-medium text-gray-600'>
+                <label htmlFor='featured' className='capitalize text-sm font-medium text-gray-600'>
                   featured
                 </label>
                 <Field
@@ -245,7 +241,7 @@ const EditEvent = () => {
             </div>
 
             <fieldset className='mt-2'>
-              <label htmlFor='location' className='capitalize text-base font-medium text-gray-600'>
+              <label htmlFor='location' className='capitalize text-sm font-medium text-gray-600'>
                 location<span className='text-red-600 text-base font-medium'>*</span>
               </label>
 
@@ -304,9 +300,7 @@ const EditEvent = () => {
             </fieldset>
 
             <fieldset className='mt-2'>
-              <label
-                htmlFor='description'
-                className='capitalize text-base font-medium text-gray-600'>
+              <label htmlFor='description' className='capitalize text-sm font-medium text-gray-600'>
                 event description<span className='text-red-600 text-base font-medium'>*</span>
               </label>
 
@@ -327,7 +321,7 @@ const EditEvent = () => {
             </fieldset>
 
             <fieldset className='mt-2'>
-              <label htmlFor='price' className='capitalize text-base font-medium text-gray-600'>
+              <label htmlFor='price' className='capitalize text-sm font-medium text-gray-600'>
                 ticket price<span className='text-red-600 text-base font-medium'>*</span>
               </label>
               <div
@@ -349,8 +343,22 @@ const EditEvent = () => {
               </div>
             </fieldset>
 
+            <fieldset className='mt-2'>
+              <label htmlFor='capacity' className='capitalize text-sm font-medium text-gray-600'>
+                event capacity<span className='text-red-600 text-base font-medium'>*</span>
+              </label>
+              <Field
+                name='capacity'
+                type='number'
+                placeholder='Enter event capacity..'
+                className={classNames(
+                  'block w-full px-3 rounded border-0 py-3 text-gray-700 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset text-sm outline-none'
+                )}
+              />
+            </fieldset>
+
             <fieldset className='mt-2 relative'>
-              <label htmlFor='uploads' className='capitalize text-base font-medium text-gray-600'>
+              <label htmlFor='uploads' className='capitalize text-sm font-medium text-gray-600'>
                 upload media
               </label>
 
@@ -397,8 +405,8 @@ const EditEvent = () => {
               <button
                 type='submit'
                 disabled={isLoading}
-                className='disabled:ring-gray-200 disabled:pointer-events-none disabled:text-indigo-300 disabled:bg-[#FAFAFA] disabled:ring-1 text-base capitalize font-semibold border-none ring-2 w-full ring-gray-200 rounded-md py-2.5 px-6 text-white bg-indigo-500'>
-                create
+                className='disabled:ring-gray-200 disabled:pointer-events-none disabled:text-indigo-300 disabled:bg-[#FAFAFA] disabled:ring-1 capitalize font-medium border-none ring-2 w-full ring-gray-200 rounded-md py-2.5 px-6 text-white bg-indigo-500 text-sm'>
+                edit
               </button>
             </div>
           </Form>

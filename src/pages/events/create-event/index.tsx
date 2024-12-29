@@ -20,28 +20,13 @@ interface InitialValues {
   location: string;
   eventDate: string;
   category: string;
-  image: File | null;
+  image: File |null;
   from: string;
   to: string;
   capacity: number;
   featured: boolean;
   'ticket-type': string;
 }
-
-const iniitialValues: InitialValues = {
-  capacity: 0,
-  category: '',
-  location: '',
-  eventDate: '',
-  from: '',
-  to: '',
-  description: '',
-  price: 20,
-  title: '',
-  image: null,
-  featured: false,
-  'ticket-type': '',
-};
 
 const handleLocationChecker = (
   locationCoords: { lat: number; long: number },
@@ -75,7 +60,21 @@ const CreateEvent = () => {
     lat: 0,
     long: 0,
   });
-
+  
+  const iniitialValues: InitialValues = {
+    capacity: 0,
+    category: '',
+    location: '',
+    eventDate: '',
+    from: '',
+    to: '',
+    description: '',
+    price: 20,
+    title: '',
+    image: null,
+    featured: false,
+    'ticket-type': '',
+  };
   async function onSubmit(values: InitialValues, { resetForm }: FormikHelpers<InitialValues>) {
     try {
       await addCategory({ name: values.category }).unwrap();
@@ -110,7 +109,8 @@ const CreateEvent = () => {
       </header>
 
       <Formik initialValues={iniitialValues} onSubmit={onSubmit}>
-        {({ errors, touched, setFieldValue }) => {
+        {({ errors, touched, values, setFieldValue }) => {
+          console.log(values);
           return (
             <Form className='mt-4 w-full bg-white rounded-lg p-6 max-w-xl border'>
               <fieldset className='mt-2'>

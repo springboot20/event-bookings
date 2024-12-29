@@ -1,5 +1,5 @@
 import { EventInterface } from '../../types/events';
-import { AcceptedPersmissonRoles, formatDate, formatPrice } from '../../util';
+import { AcceptedPersmissonRoles, formatDate, formatPrice, truncateChars } from '../../util';
 import {
   BookmarkIcon,
   CalendarDaysIcon,
@@ -77,7 +77,9 @@ export const EventItem: React.FC<{ event: EventInterface }> = ({ event }) => {
           <div className='flex items-center justify-between'>
             <div className='space-x-1.5 flex items-center'>
               <MapPinIcon className='size-4' />
-              <span className='text-sm text-gray-800 font-medium'>{event?.location}</span>
+              <span className='text-sm truncate text-gray-800 font-medium'>
+                {truncateChars(event?.location, 14)}
+              </span>
             </div>
 
             <div className='space-x-1.5 flex items-center'>
@@ -102,7 +104,7 @@ export const EventItem: React.FC<{ event: EventInterface }> = ({ event }) => {
               <button
                 type='button'
                 onClick={() => {
-                  navigate(`/events/edit-event/${event?._id}`);
+                  navigate(`/events/${event?._id}/edit-event/`);
                 }}
                 className='flex items-center gap-1 text-sm rounded-3xl px-2 py-1.5 border hover:bg-indigo-400 bg-indigo-500 text-white'>
                 <PencilIcon className='h-5 w-5' />

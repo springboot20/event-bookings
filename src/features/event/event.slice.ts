@@ -82,13 +82,32 @@ export const EventApiSlice = ApiService.injectEndpoints({
           : [{ type: 'Event', id: 'EVENT' }],
     }),
 
-    updateEvent: builder.mutation<Response, Pick<EventInterface, '_id'> & Partial<EventInterface>>({
-      query: ({ _id, ...patch }) => ({
-        url: `/events/${_id}`,
-        method: 'PATCH',
-        body: patch,
-        formData: true,
-      }),
+    updateEvent: builder.mutation<Response, Pick<EventMutation, '_id'> & Partial<EventMutation>>({
+      query: ({ _id, ...patch }) => {
+        const formData = new FormData();
+
+        Object.keys(patch).forEach((key) => {
+          const eventDate = new Date(patch['eventDate']);
+
+          if (key === 'from' && patch[key]) {
+            const [fromHours, fromMinutes] = patch[key].split(':').map(Number);
+            const fromDate = new Date(eventDate);
+            fromDate.setHours(fromHours, fromMinutes);
+            formData.append(key, fromDate.toISOString());
+          } else if (key === 'to' && patch[key]) {
+            const [toHours, toMinutes] = patch[key].split(':').map(Number);
+            const toDate = new Date(eventDate);
+            toDate.setHours(toHours, toMinutes);
+            formData.append(key, toDate.toISOString());
+          } else if (Array.isArray(patch[key]) || typeof patch[key] === 'object') {
+            formData.append(key, JSON.stringify(patch[key]));
+          } else {
+            formData.append(key, patch[key]);
+          }
+        });
+
+        return { url: `/events/${_id}`, method: 'PATCH', body: patch, formData: true };
+      },
       invalidatesTags: (_, __, { _id }) => [{ id: _id, type: 'Event' }],
     }),
 

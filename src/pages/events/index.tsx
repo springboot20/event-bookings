@@ -99,8 +99,10 @@ const Events = () => {
         className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4 gap-5'>
         {isLoading ? (
           <EventSkeletonLoading cardsNumber={8} />
-        ) : searchQuery && events?.length === 0 ? (
+        ) : searchQuery ? (
           <p className='text-base font-medium text-gray-500'>No event found with {searchQuery}</p>
+        ) : events?.length === 0 ? (
+          <EventSkeletonLoading cardsNumber={8} />
         ) : (
           events?.map((event: EventInterface) => <EventItem event={event} key={event?._id} />)
         )}

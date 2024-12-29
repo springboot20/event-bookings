@@ -10,6 +10,13 @@ export enum AcceptedPersmissonRoles {
   USER = 'USER',
 }
 
+export const truncateChars = (chars: string, length: number) => {
+  if (chars.length >= length) {
+    return chars.slice(0, length) + '...';
+  }
+  return chars;
+};
+
 export const formatPrice = (price: number) => {
   return new Intl.NumberFormat('en-US', {
     currency: 'USD',
