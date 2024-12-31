@@ -2,14 +2,14 @@ import { ApiService } from '../../app/service/api.service';
 import { EventInterface } from '../../types/events';
 
 interface Response {
-  data: EventInterface | EventInterface[] | any;
+  data: any;
   statusCode: number;
   message: string;
   success: boolean;
 }
 
 interface EventQuery {
-  [key: string]: any | undefined;
+  [key: string]: undefined;
 }
 
 export interface EventMutation {

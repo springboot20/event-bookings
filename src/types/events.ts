@@ -1,4 +1,5 @@
-import { UserInterface } from "./user";
+import { SeatInterface } from './seat';
+import { UserInterface } from './user';
 
 export interface EventInterface {
   _id: string;
@@ -18,6 +19,10 @@ export interface EventInterface {
   };
   capacity: number;
   category: CategoryInterface;
+  seatId?: {
+    _id: string;
+    seats: Array<SeatInterface>;
+  };
 }
 
 export interface CategoryInterface {

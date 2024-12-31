@@ -42,7 +42,7 @@ export default function SettingSidebar() {
             variants={sidebarSettings}
             initial="initial"
             animate="final"
-            className="fixed hidden lg:block flex-1 max-w-sm min-h-screen w-full flex-col border-r"
+            className="fixed hidden lg:block flex-1 max-w-sm min-h-screen w-full flex-col border-r bg-white"
           >
             <div className="w-full h-full p-2.5">
               <DisclosureButton className="lg:hidden absolute right-8 top-4">

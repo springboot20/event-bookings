@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { LocalStorage } from "../../util";
-import { AuthApiSlice } from "./auth.slice";
-import { TokensInterface } from "../../types/context";
-import { UserInterface } from "../../types/user";
+import { createSlice } from '@reduxjs/toolkit';
+import { LocalStorage } from '../../util';
+import { AuthApiSlice } from './auth.slice';
+import { TokensInterface } from '../../types/context';
+import { UserInterface } from '../../types/user';
 
 interface InitialState {
   tokens: TokensInterface;
@@ -10,16 +10,17 @@ interface InitialState {
   isAuthenticated: boolean;
 }
 
-const initialState: InitialState = {
-  tokens: LocalStorage.get("tokens") as TokensInterface,
-  user: LocalStorage.get("user") as UserInterface,
-  isAuthenticated: LocalStorage.get("authentified") as boolean,
+export const AuthInitialState: InitialState = {
+  tokens: LocalStorage.get('tokens') as TokensInterface,
+  user: LocalStorage.get('user') as UserInterface,
+  isAuthenticated: LocalStorage.get('authentified') as boolean,
 };
 
 const authSlice = createSlice({
-  name: "auth",
-  initialState,
-  reducers: {},
+  name: 'auth',
+  initialState:AuthInitialState,
+  reducers: {
+  },
   extraReducers: (builder) => {
     /**
      * Login builder casing
@@ -31,9 +32,9 @@ const authSlice = createSlice({
       state.user = data.user;
       state.tokens = data.tokens;
 
-      LocalStorage.set("user", data.user);
-      LocalStorage.set("authentified", data.user.isAuthenticated);
-      LocalStorage.set("tokens", data.tokens);
+      LocalStorage.set('user', data.user);
+      LocalStorage.set('authentified', data.user.isAuthenticated);
+      LocalStorage.set('tokens', data.tokens);
     });
 
     /**
@@ -44,9 +45,9 @@ const authSlice = createSlice({
       state.tokens = null!;
       state.isAuthenticated = false;
 
-      LocalStorage.remove("user");
-      LocalStorage.remove("authentified");
-      LocalStorage.remove("tokens");
+      LocalStorage.remove('user');
+      LocalStorage.remove('authentified');
+      LocalStorage.remove('tokens');
     });
   },
 });

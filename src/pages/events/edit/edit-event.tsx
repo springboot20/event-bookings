@@ -69,20 +69,26 @@ const EditEvent = () => {
   });
 
   const categories = data?.data?.categories as CategoryInterface[];
-  const event: EventInterface = typeof eventData?.data === 'object' && eventData?.data;
+  const event:EventInterface = eventData?.data;
 
   const event_date = new Date(event?.eventDate);
-  const concatenatedDate = `${event_date.getFullYear()}-${event_date.getMonth()}-${(
-    event_date.getDate() % 100
+  const concatenatedDate = `${event_date.getFullYear()}-${(event_date.getMonth() % 31)
+    .toString()
+    .padStart(2, '0')}-${(event_date.getDate() % 100).toString().padStart(2, '0')}`;
+
+  const from_time = new Date(event?.time?.from);
+  const concatenatedFromTime = `${(from_time.getHours() % 100).toString().padStart(2, '0')}:${(
+    from_time.getMinutes() % 100
   )
     .toString()
     .padStart(2, '0')}`;
 
-  const from_time = new Date(event?.time?.from);
-  const concatenatedFromTime = `${from_time.getHours()}:${from_time.getMinutes()}`;
-
   const to_time = new Date(event?.time?.to);
-  const concatenatedToTime = `${to_time.getHours()}:${to_time.getMinutes()}`;
+  const concatenatedToTime = `${(to_time.getHours() % 100).toString().padStart(2, '0')}:${(
+    to_time.getMinutes() % 100
+  )
+    .toString()
+    .padStart(2, '0')}`;
 
   const initialValues: InitialValues = {
     capacity: event?.capacity ?? 0,
@@ -146,7 +152,7 @@ const EditEvent = () => {
           <span className='text-sm font-medium text-gray-500'>loading event form</span>
         </div>
       ) : (
-        <Formik initialValues={event && initialValues} onSubmit={onSubmit}>
+        <Formik initialValues={initialValues} onSubmit={onSubmit}>
           {({ errors, touched, values, setFieldValue }) => (
             <Form className='mt-4 w-full bg-white rounded-lg p-6 max-w-xl border'>
               <fieldset className='mt-2'>

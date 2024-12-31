@@ -1,4 +1,4 @@
-import { ApiService } from "../../app/service/api.service";
+import { ApiService } from '../../app/service/api.service';
 
 interface RegisterMutation {
   username: string;
@@ -22,27 +22,40 @@ export const AuthApiSlice = ApiService.injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation<Response, RegisterMutation>({
       query: (data) => ({
-        url: "/auth/register",
-        method: "POST",
+        url: '/auth/register',
+        method: 'POST',
         body: data,
       }),
     }),
 
     login: builder.mutation<Response, LoginMutation>({
       query: (data) => ({
-        url: "/auth/login",
-        method: "POST",
+        url: '/auth/login',
+        method: 'POST',
         body: data,
       }),
     }),
 
     logout: builder.mutation<Response, void>({
       query: () => ({
-        url: "/auth/logout",
-        method: "POST",
+        url: '/auth/logout',
+        method: 'POST',
+      }),
+    }),
+
+    refreshAccessToken: builder.mutation<Response, { inComingRefreshToken: string }>({
+      query: ({ inComingRefreshToken }) => ({
+        url: '/auth/refresh-access-token',
+        method: 'POST',
+        body: { inComingRefreshToken },
       }),
     }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useLogoutMutation } = AuthApiSlice;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useLogoutMutation,
+  useRefreshAccessTokenMutation,
+} = AuthApiSlice;

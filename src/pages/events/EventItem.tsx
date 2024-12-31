@@ -70,7 +70,7 @@ export const EventItem: React.FC<{ event: EventInterface }> = ({ event }) => {
         </header>
         <div className='mt-2 space-y-3 p-4'>
           <div className='flex items-center justify-between'>
-            <h3 className='text-lg white- text-gray-900 font-medium'>{event?.title}</h3>
+            <h3 className='text-lg text-gray-900 font-medium'>{event?.title}</h3>
             <p className='text-sm text-gray-700 font-medium'>{formatPrice(event?.price)}</p>
           </div>
 
@@ -135,7 +135,7 @@ export const EventItem: React.FC<{ event: EventInterface }> = ({ event }) => {
                   onClick={() => navigate(`/events/${event?._id}`)}
                   className='flex items-center space-x-1.5 px-4 py-1.5 rounded-3xl border hover:bg-indigo-400 bg-indigo-500 text-white'>
                   <BookmarkIcon className='size-4' />
-                  <span className='text-sm font-normal capitalize'>book event</span>
+                  <span className='text-sm font-normal capitalize'>event details</span>
                 </button>
               )}
             </div>
