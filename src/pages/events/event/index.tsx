@@ -1,19 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetEventByIdQuery } from '../../../features/event/event.slice';
 import { EventInterface } from '../../../types/events';
 import { toast } from 'react-toastify';
-import { ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import UserAvatar from '../../../assets/user-avatar.png';
 import { classNames, formatDate, formatDateTime, formatPrice } from '../../../util';
 import Skeleton from 'react-loading-skeleton';
+// import { SeatInterface } from '../../../types/seat';
+import Seats from '../../../components/seats/Seats';
 
 const Event: React.FC = () => {
   const { eventId } = useParams();
   const { data, isLoading } = useGetEventByIdQuery(eventId!);
   const navigate = useNavigate();
+  const [showSeats, setShowSeats] = useState(false);
 
   const event = data?.data as EventInterface;
+  // const _seats = event?.seatId?.seats as SeatInterface[];
   const message = data?.message;
 
   useEffect(() => {
@@ -24,6 +28,13 @@ const Event: React.FC = () => {
 
   return (
     <div className='py-4 mx-auto flex flex-col max-w-5xl gap-5'>
+      <button
+        className='flex items-center gap-1.5 px-2 py-1 border text-sm font-medium text-gary-700 bg-white w-max rounded'
+        type='button'
+        onClick={() => navigate(-1)}>
+        <ArrowLeftIcon className='h-4' />
+        <span>events</span>
+      </button>
       {isLoading ? (
         <div className='flex items-center justify-center space-x-3 h-[calc(100vh-5rem)]'>
           <div aria-label='Loading...' role='status'>
@@ -81,7 +92,9 @@ const Event: React.FC = () => {
                 )}
                 <p className='space-x-1 text-sm'>
                   <span className='capitalize font-medium text-gray-500'>owner:</span>
-                  <span className='capitalize font-normal text-gray-500'>{event?.owner?.username}</span>
+                  <span className='capitalize font-normal text-gray-500'>
+                    {event?.owner?.username}
+                  </span>
                 </p>
               </div>
 
@@ -140,14 +153,16 @@ const Event: React.FC = () => {
               </div>
             </div>
 
-            <button
-              type='button'
-              onClick={() => {
-                navigate(`/events/${event?._id}/seats`);
-              }}
-              className='mt-10 px-4 w-fit text-center py-1.5 rounded-3xl border hover:bg-gray-50 bg-white'>
-              <span className='text-sm font-normal capitalize'>resererve a seat</span>
-            </button>
+            {showSeats && <Seats eventId={eventId!} setShowSeats={setShowSeats} />}
+
+            {!showSeats && (
+              <button
+                type='button'
+                onClick={() => setShowSeats(true)}
+                className='mt-10 px-4 w-fit text-center py-1.5 rounded-3xl border hover:bg-gray-50 bg-white'>
+                <span className='text-sm font-normal capitalize'>resererve event</span>
+              </button>
+            )}
           </div>
         </>
       )}

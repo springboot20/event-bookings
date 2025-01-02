@@ -9,7 +9,7 @@ interface Response {
 }
 
 interface EventQuery {
-  [key: string]: undefined;
+  [key: string]: any;
 }
 
 export interface EventMutation {
@@ -24,6 +24,7 @@ export const EventApiSlice = ApiService.injectEndpoints({
 
         Object.keys(data).forEach((key) => {
           const eventDate = new Date(data['eventDate']);
+
 
           if (key === 'image' && data[key]) {
             formData.append(key, data[key]);
@@ -88,6 +89,7 @@ export const EventApiSlice = ApiService.injectEndpoints({
 
         Object.keys(patch).forEach((key) => {
           const eventDate = new Date(patch['eventDate']);
+          console.log(eventDate)
 
           if (key === 'from' && patch[key]) {
             const [fromHours, fromMinutes] = patch[key].split(':').map(Number);

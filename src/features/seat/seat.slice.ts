@@ -31,13 +31,21 @@ export const SeatApiSlice = ApiService.injectEndpoints({
     }),
 
     reserveSeatForEvent: builder.mutation<Response, SeatQuery>({
-      query: ({ seat, reservedAt, eventId }) => ({
+      query: ({ seats, reservedAt, eventId }) => ({
         url: `/seats/book-seat/${eventId}`,
         method: 'POST',
-        body: { seat, reservedAt },
+        body: { seats, reservedAt },
+      }),
+    }),
+
+    getSeatsByEvent: builder.query<Response, string>({
+      query: (eventId) => ({
+        url: `/seats/${eventId}`,
+        method: 'GET',
       }),
     }),
   }),
 });
 
-export const { useGetAllEventSeatsQuery, useReserveSeatForEventMutation } = SeatApiSlice;
+export const { useGetAllEventSeatsQuery, useGetSeatsByEventQuery, useReserveSeatForEventMutation } =
+  SeatApiSlice;

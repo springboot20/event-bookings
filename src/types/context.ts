@@ -11,7 +11,7 @@ export interface AuthContextInteface {
 
 export interface TokensInterface {
   accessToken: string;
-  refrehToken: string;
+  refreshToken: string;
 }
 
 export interface AuthContextProviderProps {

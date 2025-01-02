@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { HeaderNavigation } from '../components/navigation/HeaderNavigation';
+import BookmarkModal from '../components/modals/BookmarkModal';
 
 const BookingLayout: React.FC = () => {
+  const [isOpen, setOpen] = useState(false);
+
   return (
     <>
-      <HeaderNavigation />
+      <BookmarkModal isOpen={isOpen} setIsOpen={setOpen} />
+      <HeaderNavigation setOpen={setOpen}/>
       <main className='mx-auto mt-16 max-w-7xl px-4 xl:px-0'>
         <Outlet />
       </main>

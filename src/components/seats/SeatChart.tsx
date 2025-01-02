@@ -8,7 +8,7 @@ export const SeatChart: React.FC<{
 }> = ({ seats, handleClick }) => {
 
   return (
-    <motion.div layout className='grid place-items-center gap-1 grid-flow-col'>
+    <motion.div layout className='grid place-items-center gap-1 grid-flow-col mt-4 overflow-x-scroll'>
       {seats?.slice(0, 25)?.map((s: any, i: number) => {
         return (
           <Seat

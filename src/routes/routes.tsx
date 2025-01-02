@@ -10,11 +10,11 @@ import Events from '../pages/events';
 import EditEvent from '../pages/events/edit/edit-event';
 import Event from '../pages/events/event';
 import BookingHome from '../pages';
-import Seats from '../pages/events/event/seats';
 import CreateEvent from '../pages/events/create-event';
 import Bookings from '../pages/bookings';
 import Settings from '../pages/settings';
 import Profile from '../pages/settings/profile/Index';
+import Bookmarks from '../pages/bookmark';
 
 const authroutes = () => ({
   element: (
@@ -48,7 +48,19 @@ const bookingsroutes = () => {
       },
       {
         path: 'bookings',
-        element: <Bookings />,
+        element: (
+          <PrivateRoute roles={[AcceptedPersmissonRoles.USER]}>
+            <Bookings />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'bookmarks',
+        element: (
+          <PrivateRoute roles={[AcceptedPersmissonRoles.USER]}>
+            <Bookmarks />
+          </PrivateRoute>
+        ),
       },
       {
         path: 'settings',
@@ -104,15 +116,6 @@ const bookingsroutes = () => {
                 element: (
                   <PrivateRoute roles={[AcceptedPersmissonRoles.ADMIN]}>
                     <EditEvent />
-                  </PrivateRoute>
-                ),
-              },
-              {
-                path: 'seats',
-                element: (
-                  <PrivateRoute
-                    roles={[AcceptedPersmissonRoles.ADMIN, AcceptedPersmissonRoles.USER]}>
-                    <Seats />
                   </PrivateRoute>
                 ),
               },

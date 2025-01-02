@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { EventSkeletonLoading } from '../../components/loaders/SkeletonLoader';
@@ -10,11 +10,13 @@ import { toast } from 'react-toastify';
 import { Pagination } from '../../components/Pagination';
 import { useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
-import { EventItem } from './EventItem';
+import { EventItem } from '../../components/events/EventItem';
+import { BookMarkSeats } from '../../components/modals/BookMarkSeats';
 
 const Events = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [openBookmark, setOpenBookmark] = useState<{ [b: string]: boolean }>({});
 
   const [page, setPage] = useState(1);
   const limit = 10;
@@ -26,6 +28,12 @@ const Events = () => {
     featured: false,
   });
   const { user } = useAppSelector((state: RootState) => state.auth);
+
+  const handleBookmarkOpen = (eventId: string) =>
+    setOpenBookmark((prev) => ({ ...prev, [eventId]: true }));
+
+  const handleBookmarkClose = (eventId: string) =>
+    setOpenBookmark((prev) => ({ ...prev, [eventId]: false }));
 
   const events = data?.data?.docs;
 
@@ -104,7 +112,17 @@ const Events = () => {
         ) : events?.length === 0 ? (
           <EventSkeletonLoading cardsNumber={8} />
         ) : (
-          events?.map((event: EventInterface) => <EventItem event={event} key={event?._id} />)
+          events?.map((event: EventInterface) => (
+            <Fragment key={event?._id}>
+              <BookMarkSeats
+                isOpen={!!openBookmark[event?._id]}
+                onClose={() => handleBookmarkClose(event?._id)}
+                eventId={event?._id}
+              />
+
+              <EventItem event={event} handleOpenBookmark={() => handleBookmarkOpen(event?._id)} />
+            </Fragment>
+          ))
         )}
       </motion.div>
       {events?.length !== 0 && (

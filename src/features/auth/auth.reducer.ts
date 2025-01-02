@@ -18,9 +18,8 @@ export const AuthInitialState: InitialState = {
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState:AuthInitialState,
-  reducers: {
-  },
+  initialState: AuthInitialState,
+  reducers: {},
   extraReducers: (builder) => {
     /**
      * Login builder casing

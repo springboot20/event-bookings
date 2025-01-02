@@ -5,7 +5,6 @@ import { LocalStorage } from './util';
 import { jwtDecode } from 'jwt-decode';
 import { useRefreshAccessTokenMutation } from './features/auth/auth.slice';
 import { TokensInterface } from './types/context';
-import { AuthInitialState } from './features/auth/auth.reducer';
 
 export default function App() {
   const [refreshAccessToken] = useRefreshAccessTokenMutation();
@@ -16,8 +15,6 @@ export default function App() {
         const response = await refreshAccessToken({ inComingRefreshToken }).unwrap();
 
         const { data } = response;
-
-        AuthInitialState.tokens = data?.tokens;
 
         LocalStorage.set('tokens', data?.tokens);
       } catch (error: any) {
@@ -30,7 +27,7 @@ export default function App() {
   const authenticationExpires = useCallback((token: string) => {
     try {
       if (!token) {
-        AuthInitialState.isAuthenticated = false;
+        LocalStorage.set('authentified', false);
         return;
       }
 
@@ -40,7 +37,7 @@ export default function App() {
       return !expirationTime || Date.now() >= expirationTime * 1000;
     } catch (error) {
       console.error('Error decoding token:', error);
-      AuthInitialState.isAuthenticated = false;
+      LocalStorage.set('authentified', false);
     }
   }, []);
 
@@ -48,12 +45,8 @@ export default function App() {
     const tokens = LocalStorage.get('tokens') as TokensInterface;
     const isTokenExpired = authenticationExpires(tokens?.accessToken);
 
-    console.log(isTokenExpired);
-
     if (isTokenExpired) {
-      refreshToken(
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzZlNzUwNDU1YzJiZTAwZjQ5ZGZiMjUiLCJpYXQiOjE3MzU1MDA0MjUsImV4cCI6MTczODA5MjQyNX0.Y_FxPEwZp_Q7kGJOFVcTln2rLA4lcZhnR6fEUCj0cE4'
-      );
+      refreshToken(tokens?.refreshToken);
     }
   }, [authenticationExpires, refreshToken]);
 

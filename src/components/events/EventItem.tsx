@@ -14,13 +14,16 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
 import { useState, useCallback } from 'react';
-import { DeleteModal } from '../../components/modals/DeleteEventModal';
+import { DeleteModal } from '../modals/DeleteEventModal';
 import { useDeleteEventMutation } from '../../features/event/event.slice';
 import { toast } from 'react-toastify';
 
-export const EventItem: React.FC<{ event: EventInterface }> = ({ event }) => {
+export const EventItem: React.FC<{ event: EventInterface; handleOpenBookmark: () => void }> = ({
+  event,
+  handleOpenBookmark,
+}) => {
   const event_date = new Date(event?.eventDate);
-  const isSoldOut = event_date.getTime() < new Date(Date.now() + 1).getTime();
+  const isSoldOut = event_date.getTime() < new Date(Date.now()).getTime();
   const navigate = useNavigate();
   const [open, setOpen] = useState<{ [key: string]: boolean }>({});
   const [eventDeleted, setEventDeleted] = useState<boolean>(false);
@@ -32,12 +35,10 @@ export const EventItem: React.FC<{ event: EventInterface }> = ({ event }) => {
       await deleteEvent(eventId)
         .unwrap()
         .then((response) => {
-          console.log(response.data);
           setEventDeleted(true);
           toast.success(response.message);
         })
         .catch((error: any) => {
-          console.log(error);
           if (error) {
             toast.error(error.error);
             toast.error(error.data.message);
@@ -116,7 +117,8 @@ export const EventItem: React.FC<{ event: EventInterface }> = ({ event }) => {
               <button
                 type='button'
                 disabled={isSoldOut}
-                className='flex items-center space-x-1.5 px-4 py-1.5 rounded-3xl border hover:bg-gray-100 disabled:bg-gray-100 bg-gray-50 '>
+                className='flex items-center space-x-1.5 px-4 py-1.5 rounded-3xl border hover:bg-gray-100 disabled:bg-gray-100 bg-gray-50'
+                onClick={handleOpenBookmark}>
                 <BookmarkIcon className='size-4' />
                 <span className='text-sm font-normal capitalize'>bookmark</span>
               </button>

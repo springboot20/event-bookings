@@ -1,10 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { ApiService } from "./service/api.service";
-import { authReducer } from "../features/auth/auth.reducer";
+import { configureStore } from '@reduxjs/toolkit';
+import { ApiService } from './service/api.service';
+import { authReducer } from '../features/auth/auth.reducer';
+import { bookmarkReducer } from '../features/bookmark/bookmark.reducer';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    bookmark: bookmarkReducer,
     [ApiService.reducerPath]: ApiService.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(ApiService.middleware),

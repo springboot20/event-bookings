@@ -14,6 +14,6 @@ export const ApiService = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Auth', 'Event', 'Category', 'Seat'],
+  tagTypes: ['Auth', 'Event', 'Category', 'Seat', 'Bookmark'],
   endpoints: () => ({}),
 });
