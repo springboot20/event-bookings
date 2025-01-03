@@ -37,6 +37,7 @@ export const BookMarkSeats = ({
     setSelectedEventSeats,
     addNewItemToBookmark,
     refetchSeats,
+    refetch
   } = useBookmark();
 
   const selectedItem = bookmark?.bookmarkItems?.find((item: any) => {
@@ -146,6 +147,7 @@ export const BookMarkSeats = ({
                     onClick={async () => {
                       await addNewItemToBookmark(eventId);
                       refetchSeats();
+                      refetch()
                       setTimeout(() => onClose(), 1500);
                     }}
                     className='w-1/2 flex items-center gap-1 justify-center text-sm rounded-3xl px-2 py-3.5 text-center border hover:bg-indigo-400 bg-indigo-500 text-white'>
