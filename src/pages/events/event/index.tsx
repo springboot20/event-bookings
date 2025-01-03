@@ -7,7 +7,6 @@ import { ArrowLeftIcon, ClockIcon, MapPinIcon } from '@heroicons/react/24/outlin
 import UserAvatar from '../../../assets/user-avatar.png';
 import { classNames, formatDate, formatDateTime, formatPrice } from '../../../util';
 import Skeleton from 'react-loading-skeleton';
-// import { SeatInterface } from '../../../types/seat';
 import Seats from '../../../components/seats/Seats';
 
 const Event: React.FC = () => {
@@ -17,7 +16,6 @@ const Event: React.FC = () => {
   const [showSeats, setShowSeats] = useState(false);
 
   const event = data?.data as EventInterface;
-  // const _seats = event?.seatId?.seats as SeatInterface[];
   const message = data?.message;
 
   useEffect(() => {

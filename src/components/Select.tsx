@@ -62,7 +62,8 @@ export const SeatsSelection: React.FC<{
                 value={opt}
                 className={({ active }) =>
                   classNames(
-                    'flex items-center space-x-2 py-1.5 px-2 cursor-pointer relative',
+                    'flex items-center space-x-2 py-1.5 px-2 relative',
+                    opt.isReserved ? 'bg-red-50 cursor-not-allowed' : 'cursor-pointer',
                     active ? 'bg-gray-100 text-gray-600' : 'text-gray-700'
                   )
                 }>

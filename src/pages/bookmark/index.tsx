@@ -43,6 +43,7 @@ const Bookmarks = () => {
     handleSelectedSeats,
     filteredSeats,
     setNewSelectedSeatIds,
+    refetchSeats,
   } = useBookmark();
 
   const shipping = 5.0;
@@ -78,12 +79,12 @@ const Bookmarks = () => {
                     />
                   </div>
                   <p className='text-xl font-semibold text-gray-800 mb-6'>
-                    Your cart is empty. Keep shopping to find a product!
+                    Your bookmark is empty. Keep reserving to find an event!
                   </p>
                   <Link
-                    to='/collections'
+                    to='/events'
                     className='bg-gray-800 hover:bg-gray-600 rounded-md px-5 py-2 text-lg font-medium text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600'>
-                    Keep Shopping
+                    Keep Bookmarking
                   </Link>
                 </div>
               ) : (
@@ -94,7 +95,7 @@ const Bookmarks = () => {
                         <div className='h-36 w-44 flex-shrink-0 overflow-hidden rounded-md border border-gray-200'>
                           <img
                             src={item?.event?.image?.url}
-                            alt={'product image'}
+                            alt={'event image'}
                             className='h-full w-full object-cover object-center'
                           />
                         </div>
@@ -134,7 +135,7 @@ const Bookmarks = () => {
                                         ?.filter((seat) =>
                                           [...new Set([...newSelectedSeatIds])].includes(seat._id)
                                         )
-                                        // ?.sort((a, b) => a.number - b.number)
+                                        ?.sort((a, b) => a.number - b.number)
                                         ?.map((ss) => {
                                           return (
                                             <div
@@ -172,7 +173,10 @@ const Bookmarks = () => {
                                 </div>
                                 <button
                                   type='button'
-                                  onClick={() => handleUpdateSeats(item.event?._id)}
+                                  onClick={() => {
+                                    refetchSeats();
+                                    handleUpdateSeats(item.event?._id);
+                                  }}
                                   className='font-medium text-indigo-600 hover:text-indigo-500'>
                                   Save
                                 </button>
@@ -190,7 +194,7 @@ const Bookmarks = () => {
                                   <button
                                     type='button'
                                     onClick={() => {
-                                      handleDelete(item.product?._id);
+                                      handleDelete(item?.event?._id);
                                     }}
                                     className='text-red-600 hover:text-red-500'>
                                     <TrashIcon className='h-6' />
@@ -218,7 +222,7 @@ const Bookmarks = () => {
 
           <div className='relative col-span-1 w-full'>
             <div className='p-6 bg-white rounded-lg border w-full'>
-              <h3 className='text-base sm:text-lg font-medium text-gray-800'>Order summary</h3>
+              <h3 className='text-base sm:text-lg font-medium text-gray-800'>Bookmark summary</h3>
 
               <ul className='mt-3'>
                 <li className='border-b py-3 px-2 flex items-center justify-between'>
@@ -237,7 +241,7 @@ const Bookmarks = () => {
                 </li>
               </ul>
               <div className='mt-4 flex items-center justify-between'>
-                <h3 className='text-base sm:text-lg font-medium text-gray-800'>Order total</h3>
+                <h3 className='text-base sm:text-lg font-medium text-gray-800'>Bookmark total</h3>
                 <span className='font-semibold text-base text-gray-800'>
                   {formatPrice(OrderTotal())}
                 </span>
@@ -317,7 +321,7 @@ export const SeatsSelection: React.FC<{
                   classNames(
                     'flex items-center space-x-2 py-1.5 px-2 cursor-pointer relative',
                     active ? 'bg-gray-100 text-gray-600' : 'text-gray-700',
-                    opt.isReserved && 'bg-gray-50'
+                    opt.isReserved && 'bg-red-50'
                   )
                 }>
                 {({ selected, active }) => (

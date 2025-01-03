@@ -2,16 +2,16 @@ import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
+  DialogTitle,
   Transition,
   TransitionChild,
 } from '@headlessui/react';
-import { SeatInterface } from '../../types/seat';
 import { Fragment } from 'react/jsx-runtime';
-import { useState } from 'react';
 import { SeatsSelection } from '../Select';
-import { useGetSeatsByEventQuery } from '../../features/seat/seat.slice';
 import { classNames } from '../../util';
 import { BookmarkIcon, TableCellsIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { useBookmark } from '../../hooks/useBookmark';
+import { useEffect } from 'react';
 
 export const BookMarkSeats = ({
   onClose,
@@ -22,28 +22,36 @@ export const BookMarkSeats = ({
   onClose: () => void;
   eventId: string;
 }) => {
-  const { data, isLoading } = useGetSeatsByEventQuery(eventId);
-  const [selectedSeats, setSelectedSeats] = useState<SeatInterface[]>([]);
-  const [query, setQuery] = useState<string>('');
-  const [_seats, setSeats] = useState<string[]>([]);
-  const seats: SeatInterface[] = data?.data?.seats;
+  const {
+    selectedSeats,
+    setQuery,
+    isLoading,
+    allSeats,
+    selectedEventSeats,
+    newSelectedSeatIds,
+    handleSelectedSeats,
+    filteredSeats,
+    setNewSelectedSeatIds,
+    setEventId,
+    bookmark,
+    setSelectedEventSeats,
+    addNewItemToBookmark,
+    refetchSeats,
+  } = useBookmark();
 
-  const filteredSeats =
-    query === ''
-      ? seats
-      : seats?.filter((seat) => {
-          return seat?.number.toString() === query;
-        });
+  const selectedItem = bookmark?.bookmarkItems?.find((item: any) => {
+    return item?.event?._id === eventId;
+  });
 
-  const handleSelectedSeats = (value: SeatInterface[]) => {
-    setSelectedSeats(value);
-    value.forEach((v) => {
-      if (!_seats?.includes(v?._id)) {
-        setSeats([..._seats, v?._id]);
-      }
-    });
-  };
-  
+  useEffect(() => {
+    setEventId(eventId);
+    const seats = selectedItem?.seats;
+
+    if (selectedItem) {
+      setSelectedEventSeats(seats);
+    }
+  }, [eventId, selectedItem, setEventId, setSelectedEventSeats]);
+
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog open={isOpen} onClose={onClose} className='relative z-30 ' as='div'>
@@ -67,7 +75,10 @@ export const BookMarkSeats = ({
               leave='ease-in duration-200'
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'>
-              <DialogPanel className='relative transform rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6 h-auto'>
+              <DialogPanel className='relative transform rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6 h-auto'>
+                <DialogTitle className='text-lg font-medium text-gray-700'>
+                  Select seats to reserved for event
+                </DialogTitle>
                 <SeatsSelection
                   selectedSeats={selectedSeats}
                   filteredSeats={filteredSeats}
@@ -82,24 +93,41 @@ export const BookMarkSeats = ({
                     <TableCellsIcon className='h-5 w-5 mr-2' /> Selected Seats
                   </span>
                   <div className='flex justify-start items-center flex-wrap gap-2 mt-3'>
-                    {seats
-                      ?.filter((seat) => _seats.includes(seat._id))
+                    {allSeats
+                      ?.filter((seat) => [...new Set([...newSelectedSeatIds])].includes(seat._id))
+                      ?.sort((a, b) => a.number - b.number)
                       ?.map((ss) => {
                         return (
                           <div
                             className='inline-flex bg-secondary rounded-full p-2 border-[1px] border-zinc-400 items-center gap-2'
                             key={ss?._id}>
                             <p className='text-indigo-600'>{ss?.number}</p>
-                            <XCircleIcon
-                              role='button'
-                              className='w-6 h-6 hover:text-indigo-500 text-indigo-600 cursor-pointer'
-                              onClick={() => {
-                                setSeats(_seats?.filter((s) => s !== ss?._id));
-                              }}
-                            />
+                            {!ss?.isReserved && (
+                              <XCircleIcon
+                                role='button'
+                                className='w-6 h-6 hover:text-indigo-500 text-indigo-600 cursor-pointer'
+                                onClick={() => {
+                                  setNewSelectedSeatIds(
+                                    [...new Set([...newSelectedSeatIds])]?.filter(
+                                      (s) => s !== ss?._id
+                                    )
+                                  );
+                                }}
+                              />
+                            )}
                           </div>
                         );
                       })}
+
+                    {selectedEventSeats?.map((ss) => {
+                      return (
+                        <div
+                          className='inline-flex bg-secondary rounded-full p-2 border-[1px] border-zinc-400 items-center gap-2'
+                          key={ss?._id}>
+                          <p className='text-indigo-600'>{ss?.number}</p>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -115,8 +143,10 @@ export const BookMarkSeats = ({
                   <button
                     type='button'
                     disabled={isLoading}
-                    onClick={() => {
-                      console.log('hello');
+                    onClick={async () => {
+                      await addNewItemToBookmark(eventId);
+                      refetchSeats();
+                      setTimeout(() => onClose(), 1500);
                     }}
                     className='w-1/2 flex items-center gap-1 justify-center text-sm rounded-3xl px-2 py-3.5 text-center border hover:bg-indigo-400 bg-indigo-500 text-white'>
                     <BookmarkIcon className='size-4' />

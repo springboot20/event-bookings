@@ -17,7 +17,7 @@ export const useBookmark = () => {
   const [addItemToBookmark] = useAddEventToBookmarkMutation();
   const [removeItemToFromBookmark] = useRemoveItemFromBookmarkMutation();
   const [eventId, setEventId] = useState<string>('');
-  const { data: seatData, isLoading } = useGetSeatsByEventQuery(eventId);
+  const { data: seatData, isLoading, refetch:refetchSeats } = useGetSeatsByEventQuery(eventId);
   const [reserveSeatForEvent] = useReserveSeatForEventMutation();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -65,8 +65,6 @@ export const useBookmark = () => {
     }
   };
 
-  console.log(newSelectedSeatIds);
-
   const filteredSeats =
     query === ''
       ? seats
@@ -93,30 +91,33 @@ export const useBookmark = () => {
 
   const handleUpdateSeats = async (eventId: string) => {
     if (selectedItemId !== null && newSelectedSeatIds.length > 0) {
-      try {
-        const { message } = await addItemToBookmark({
-          eventId,
-          seats: [...new Set([...newSelectedSeatIds])],
-        }).unwrap();
-
-        await handleReserveSeatForEvent(eventId);
-
-        if (message) {
-          toast.success(message);
-          setMessage(message);
-          setSelectedSeats([])
-          setNewSelectedSeatIds([])
-        }
-      } catch (error: any) {
-        toast.error(error.data?.message);
-        toast.error(error?.error);
-      }
-
+      await addNewItemToBookmark(eventId);
       setRefreshTrigered(!refreshTrigered);
       setSelectedItemId(null);
       setIsEditing(false);
     } else {
       console.error('Invalid quantity input.');
+    }
+  };
+
+  const addNewItemToBookmark = async (eventId: string) => {
+    try {
+      const { message } = await addItemToBookmark({
+        eventId,
+        seats: [...new Set([...newSelectedSeatIds])],
+      }).unwrap();
+
+      await handleReserveSeatForEvent(eventId);
+
+      if (message) {
+        toast.success(message);
+        setMessage(message);
+        setSelectedSeats([]);
+        setNewSelectedSeatIds([]);
+      }
+    } catch (error: any) {
+      toast.error(error.data?.message);
+      toast.error(error?.error);
     }
   };
 
@@ -150,6 +151,7 @@ export const useBookmark = () => {
     handleUpdateSeats,
     refetch,
     selectedItemId,
+    addNewItemToBookmark,
 
     // seats variables
     isLoading,
@@ -158,8 +160,12 @@ export const useBookmark = () => {
     selectedEventSeats,
     newSelectedSeatIds,
     setQuery,
+    seatData,
     setNewSelectedSeatIds,
     handleSelectedSeats,
     filteredSeats,
+    setEventId,
+    refetchSeats,
+    setSelectedEventSeats,
   };
 };
