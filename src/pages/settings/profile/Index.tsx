@@ -1,9 +1,20 @@
-import { Form, Formik, Field } from 'formik';
-import { useCurrentUserQuery } from '../../../features/user/user.slice';
-import { UserInterface } from '../../../types/user';
+import {
+  useCurrentUserQuery,
+  useUpdateUserAvatarMutation,
+} from '../../../features/user/user.slice';
+// import { classNames } from '../../../util';
+// import { PhotoIcon } from '@heroicons/react/24/outline';
 import { useFile } from '../../../hooks/useFile';
-import { classNames } from '../../../util';
-import { PhotoIcon } from '@heroicons/react/24/outline';
+
+import { useState } from 'react';
+import { UserInterface } from '../../../types/user';
+import { ProfileForm } from './components/ProfileForm';
+import { ProfileDetails } from './components/ProfileDetails';
+import {
+  useGetUserProfileQuery,
+  useUpdateProfileMutation,
+} from '../../../features/profile/profile.slice';
+import { toast } from 'react-toastify';
 
 interface AvatarInterface {
   url: string;
@@ -13,32 +24,50 @@ interface AvatarInterface {
 interface InitialValues {
   username: string;
   avatar: File | AvatarInterface | null;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phoneNumber: string;
 }
 
 export default function Profile() {
-  const {
-    selectedFile,
-    isDropping,
-    setSelectedFile,
-    fileInputRef,
-    handleDragEnter,
-    handleDrop,
-    handleDragLeave,
-    handleDragOver,
-  } = useFile();
+  const { selectedFile } = useFile();
   const { data, isLoading } = useCurrentUserQuery();
+  const { data: profileData } = useGetUserProfileQuery();
+  const [updateProfile] = useUpdateProfileMutation();
+  const [updateUserAvatar] = useUpdateUserAvatarMutation();
+
+  const [editProfile, setEditProfile] = useState(false);
 
   const user: UserInterface = data?.data;
-
-  console.log(data);
+  const profile = profileData?.data?.profile;
 
   const initialValues: InitialValues = {
     username: user?.username ?? '',
+    email: user?.email ?? '',
     avatar: user?.avatar || selectedFile,
+    firstname: profile?.firstname || '',
+    lastname: profile?.lastname || '',
+    phoneNumber: profile?.phoneNumber || '',
   };
 
   async function onSubmit(values: InitialValues) {
-    console.log(values);
+    const { avatar, username, email, ...rest } = values;
+    try {
+      const response = await updateProfile(rest).unwrap();
+
+      const { data } = response;
+
+      if (response.statusCode.toString().startsWith('2')) {
+        toast.success(response?.message);
+        setEditProfile(false);
+      }
+
+      console.log(data);
+    } catch (error: any) {
+      toast.success(error?.data?.message);
+    }
+    console.log(avatar, username, email);
   }
 
   return isLoading ? (
@@ -55,97 +84,13 @@ export default function Profile() {
       </div>
       <span className='text-sm font-medium text-gray-500'>loading profile</span>
     </div>
+  ) : editProfile ? (
+    <ProfileForm
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      setEditProfile={setEditProfile}
+    />
   ) : (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
-      {(formik) => {
-        return (
-          <Form className='grid grid-cols-1 xl:grid-cols-3 gap-4 mt-4'>
-            <div className='col-span-full xl:col-span-2'>
-              <fieldset>
-                <label
-                  htmlFor='username'
-                  className='capitalize font-medium text-gray-700 text-base'>
-                  public username
-                </label>
-                <Field
-                  name='username'
-                  id='username'
-                  className='block w-full px-3 rounded-md border-0 py-3 text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset text-sm outline-none'
-                />
-              </fieldset>
-            </div>
-            <div className='col-span-full xl:col-span-1 mt-2'>
-              <fieldset className='mt-3'>
-                <label
-                  htmlFor='avatar'
-                  className='text-sm font-medium text-gray-800 dark:text-gray-50'>
-                  Upload photo
-                </label>
-                <div
-                  className={classNames(
-                    'border-dashed px-6 py-9 mt-2 border-2 rounded-md flex justify-center',
-                    isDropping ? 'border-indigo-400' : 'border-gray-400'
-                  )}
-                  onDragEnter={handleDragEnter}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}>
-                  <div className='text-center'>
-                    {selectedFile ? (
-                      <img
-                        src={URL.createObjectURL(selectedFile)}
-                        alt='avatar'
-                        className='h-32 w-32 object-cover shadow-lg mb-3 ring-2 ring-offset-2 ring-indigo-500 rounded-full mx-auto'
-                      />
-                    ) : (
-                      <PhotoIcon className='mx-auto h-11 w-11 text-gray-500 dark:text-gray-50' />
-                    )}
-                    <div className='text-center'>
-                      <label
-                        htmlFor='avatar'
-                        className='relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 '>
-                        <input
-                          type='file'
-                          id='avatar'
-                          name='avatar'
-                          hidden
-                          ref={fileInputRef}
-                          onChange={(event) => {
-                            if (event.target.files && event.target.files.length > 0) {
-                              const files = event.target.files;
-
-                              formik.setFieldValue('avatar', files[0]);
-                              setSelectedFile(files[0]);
-                            }
-                          }}
-                        />
-                        <span>Upload photo</span>
-                      </label>
-                      <p className='pl-1 dark:text-gray-50'>or drag and drop</p>
-                    </div>
-                    <p className='text-xs leading-5 text-gray-500 dark:text-gray-200'>
-                      PNG, JPEG, JPG, GIF and SVG up to 5mb
-                    </p>
-                  </div>
-                </div>
-              </fieldset>
-
-              {selectedFile && (
-                <fieldset className='mt-4'>
-                  <button
-                    type='button'
-                    onClick={() => {
-                      if (fileInputRef.current) fileInputRef.current.click();
-                    }}
-                    className='rounded bg-white px-2.5 py-2 text-sm font-medium text-gray-900 shadow ring-1 ring-inset ring-gray-300 hover:bg-gray-50'>
-                    Change profile image
-                  </button>
-                </fieldset>
-              )}
-            </div>
-          </Form>
-        );
-      }}
-    </Formik>
+    <ProfileDetails setEditProfile={setEditProfile} />
   );
 }

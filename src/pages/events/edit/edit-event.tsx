@@ -69,14 +69,14 @@ const EditEvent = () => {
   });
 
   const categories = data?.data?.categories as CategoryInterface[];
-  const event:EventInterface = eventData?.data;
+  const event: EventInterface = eventData?.data;
 
   const event_date = new Date(event?.eventDate);
   const concatenatedDate = `${event_date.getFullYear()}-${((event_date.getMonth() + 1) % 100)
     .toString()
     .padStart(2, '0')}-${(event_date.getDate() % 100).toString().padStart(2, '0')}`;
 
-    console.log(concatenatedDate)
+  console.log(concatenatedDate);
 
   const from_time = new Date(event?.time?.from);
   const concatenatedFromTime = `${(from_time.getHours() % 100).toString().padStart(2, '0')}:${(
@@ -120,7 +120,7 @@ const EditEvent = () => {
       })
       .catch((error: any) => {
         console.log(error);
-        toast.error(error?.message || error?.data?.message);
+        toast.error(error?.data?.message || error?.data?.message);
       });
   }
 

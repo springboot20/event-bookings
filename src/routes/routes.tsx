@@ -15,6 +15,8 @@ import Bookings from '../pages/bookings';
 import Settings from '../pages/settings';
 import Profile from '../pages/settings/profile/Index';
 import Bookmarks from '../pages/bookmark';
+import VerifiyEmail from '../pages/email/verify-email/VerifyEmail';
+import Account from '../pages/settings/account';
 
 const authroutes = () => ({
   element: (
@@ -34,6 +36,16 @@ const authroutes = () => ({
     {
       path: 'logout',
       element: <Navigate to={'/login'} replace state={{ path: window.location.pathname }} />,
+    },
+  ],
+});
+
+const emailroutes = () => ({
+  path: 'email',
+  children: [
+    {
+      path: 'verify-email',
+      element: <VerifiyEmail />,
     },
   ],
 });
@@ -76,7 +88,7 @@ const bookingsroutes = () => {
           },
           {
             path: 'account',
-            element: <Profile />,
+            element: <Account />,
           },
         ],
       },
@@ -128,7 +140,7 @@ const bookingsroutes = () => {
 };
 
 export const router = () => {
-  const router = createBrowserRouter([authroutes(), bookingsroutes()]);
+  const router = createBrowserRouter([authroutes(), emailroutes(), bookingsroutes()]);
 
   return router;
 };

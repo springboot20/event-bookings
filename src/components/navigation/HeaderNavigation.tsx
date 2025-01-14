@@ -109,7 +109,7 @@ export const HeaderNavigation: React.FC<{
                     Login
                   </Link>
                 ) : (
-                  <div className="flex items-center gap-3">
+                  <div className='flex items-center gap-3'>
                     {user?.role === 'USER' && (
                       <button
                         className={classNames(
@@ -169,7 +169,7 @@ export const HeaderNavigation: React.FC<{
                           <MenuItem>
                             {({ active }) => (
                               <NavLink
-                                to='#'
+                                to='/settings/profile'
                                 className={classNames(
                                   active ? 'bg-gray-100' : '',
                                   'flex items-center gap-2 px-4 py-2 text-sm text-gray-800 font-medium'
@@ -220,7 +220,7 @@ export const HeaderNavigation: React.FC<{
                           <MenuItem>
                             {({ active }) => (
                               <NavLink
-                                to='/settings'
+                                to='/settings/profile'
                                 className={classNames(
                                   active ? 'bg-gray-100' : '',
                                   'flex items-center gap-2 px-4 py-2 text-sm text-gray-800 font-medium'

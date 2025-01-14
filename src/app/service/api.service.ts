@@ -4,7 +4,7 @@ import { TokensInterface } from '../../types/context';
 
 export const ApiService = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5020/api/v1',
+    baseUrl: 'http://localhost:5000/api/v1/bookings',
     prepareHeaders: (headers) => {
       const tokens = LocalStorage.get('tokens') as TokensInterface;
       if (tokens) {

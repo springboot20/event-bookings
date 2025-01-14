@@ -10,7 +10,7 @@ const BookingLayout: React.FC = () => {
     <>
       <BookmarkModal isOpen={isOpen} setIsOpen={setOpen} />
       <HeaderNavigation setOpen={setOpen}/>
-      <main className='mx-auto mt-16 max-w-7xl px-4 xl:px-0'>
+      <main className='mx-auto mt-16 max-w-7xl px-2'>
         <Outlet />
       </main>
     </>

@@ -17,7 +17,7 @@ export const useBookmark = () => {
   const [addItemToBookmark] = useAddEventToBookmarkMutation();
   const [removeItemToFromBookmark] = useRemoveItemFromBookmarkMutation();
   const [eventId, setEventId] = useState<string>('');
-  const { data: seatData, isLoading, refetch:refetchSeats } = useGetSeatsByEventQuery(eventId);
+  const { data: seatData, isLoading, refetch: refetchSeats } = useGetSeatsByEventQuery(eventId);
   const [reserveSeatForEvent] = useReserveSeatForEventMutation();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);

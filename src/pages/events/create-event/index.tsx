@@ -20,7 +20,7 @@ interface InitialValues {
   location: string;
   eventDate: string;
   category: string;
-  image: File |null;
+  image: File | null;
   from: string;
   to: string;
   capacity: number;
@@ -60,7 +60,7 @@ const CreateEvent = () => {
     lat: 0,
     long: 0,
   });
-  
+
   const iniitialValues: InitialValues = {
     capacity: 0,
     category: '',

@@ -21,7 +21,7 @@ const Events = () => {
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  const { data, isLoading } = useGetAllEventsQuery({
+  const { data, isLoading, refetch } = useGetAllEventsQuery({
     limit,
     page,
     title: searchQuery.toLowerCase(),
@@ -63,7 +63,8 @@ const Events = () => {
     if (data?.message) {
       toast.success(data?.message);
     }
-  }, [data?.message]);
+    refetch()
+  }, [data?.message, refetch]);
 
   return (
     <motion.div className='py-4'>

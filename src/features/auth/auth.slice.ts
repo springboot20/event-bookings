@@ -11,6 +11,10 @@ interface LoginMutation {
   password: string;
 }
 
+interface Query {
+  [key: string]: any;
+}
+
 interface Response {
   data: any;
   statusCode: number;
@@ -50,6 +54,22 @@ export const AuthApiSlice = ApiService.injectEndpoints({
         body: { inComingRefreshToken },
       }),
     }),
+
+    verifyEmail: builder.mutation<Response, Query>({
+      query: ({ id, token }) => {
+        return {
+          url: `/auth/verify-email?id=${id}&token=${token}`,
+          method: 'POST',
+        };
+      },
+    }),
+
+    resendEmailVerification: builder.mutation<Response, void>({
+      query: () => ({
+        url: '/auth/resend-email-verification',
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -58,4 +78,6 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useRefreshAccessTokenMutation,
+  useResendEmailVerificationMutation,
+  useVerifyEmailMutation,
 } = AuthApiSlice;

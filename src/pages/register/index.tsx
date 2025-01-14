@@ -3,7 +3,7 @@ import { classNames } from '../../util';
 import { useState } from 'react';
 import { EyeIcon, EyeSlashIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { CustomErrorMessage } from '../../components/Error';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { registerValidation } from '../../schema/register';
 import { useRegisterMutation } from '../../features/auth/auth.slice';
 import { toast } from 'react-toastify';
@@ -23,18 +23,30 @@ const initialValues: InitialValues = {
 const Register = () => {
   const [show, setShow] = useState<boolean>(false);
   const [register] = useRegisterMutation();
-  const navigate = useNavigate();
 
   async function onSubmit(values: InitialValues, { resetForm }: FormikHelpers<InitialValues>) {
     await register(values)
       .unwrap()
       .then((response) => {
+        const { email_url } = response.data;
+
+        const verificationWindow = window.open(email_url);
         toast.success(response?.message);
+
+        if (verificationWindow) {
+          const interval = setInterval(() => {
+            if (verificationWindow.closed) {
+              toast(response?.message, { type: 'success' });
+              clearInterval(interval);
+            }
+          }, 1000);
+        } else {
+          console.error('Failed to open payment window.');
+        }
         resetForm();
-        setTimeout(() => navigate('/login'), 1200);
       })
       .catch((error) => {
-        toast(error?.error || error?.data?.message, { type: 'error' });
+        toast(error?.data?.message || error?.error, { type: 'error' });
       });
   }
 
