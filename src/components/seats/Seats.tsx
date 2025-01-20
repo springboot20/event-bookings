@@ -45,7 +45,7 @@ export default function Seats({
         });
       }
     } catch (error: any) {
-      toast(error?.error || error?.response?.message, { type: 'error' });
+      toast(error?.error || error?.data?.message, { type: 'error' });
     }
   };
 
@@ -63,7 +63,7 @@ export default function Seats({
         });
       }
     } catch (error: any) {
-      toast(error?.error || error?.response?.message, { type: 'error' });
+      toast(error?.error || error?.data?.message, { type: 'error' });
     }
   };
 
