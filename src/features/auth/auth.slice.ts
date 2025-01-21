@@ -1,4 +1,4 @@
-import { ApiService } from '../../app/service/api.service';
+import { ApiService } from "../../app/service/api.service";
 
 interface RegisterMutation {
   username: string;
@@ -26,31 +26,31 @@ export const AuthApiSlice = ApiService.injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation<Response, RegisterMutation>({
       query: (data) => ({
-        url: '/auth/register',
-        method: 'POST',
+        url: "/auth/register",
+        method: "POST",
         body: data,
       }),
     }),
 
     login: builder.mutation<Response, LoginMutation>({
       query: (data) => ({
-        url: '/auth/login',
-        method: 'POST',
+        url: "/auth/login",
+        method: "POST",
         body: data,
       }),
     }),
 
     logout: builder.mutation<Response, void>({
       query: () => ({
-        url: '/auth/logout',
-        method: 'POST',
+        url: "/auth/logout",
+        method: "POST",
       }),
     }),
 
     refreshAccessToken: builder.mutation<Response, { inComingRefreshToken: string }>({
       query: ({ inComingRefreshToken }) => ({
-        url: '/auth/refresh-access-token',
-        method: 'POST',
+        url: "/auth/refresh-access-token",
+        method: "POST",
         body: { inComingRefreshToken },
       }),
     }),
@@ -59,15 +59,31 @@ export const AuthApiSlice = ApiService.injectEndpoints({
       query: ({ id, token }) => {
         return {
           url: `/auth/verify-email?id=${id}&token=${token}`,
-          method: 'POST',
+          method: "POST",
         };
       },
     }),
 
     resendEmailVerification: builder.mutation<Response, void>({
       query: () => ({
-        url: '/auth/resend-email-verification',
-        method: 'POST',
+        url: "/auth/resend-email-verification",
+        method: "POST",
+      }),
+    }),
+
+    forgotPassword: builder.mutation<Response, { email: string }>({
+      query: ({ email }) => ({
+        url: `/auth/forgot-password`,
+        method: "POST",
+        body: { email },
+      }),
+    }),
+
+    resetForgottenPassword: builder.mutation<Response, Query>({
+      query: ({ newPassword, email, resetToken }) => ({
+        url: `/auth/reset-forgotten-password?=resetToken=${resetToken}`,
+        method: "POST",
+        body: { newPassword, email },
       }),
     }),
   }),
@@ -80,4 +96,6 @@ export const {
   useRefreshAccessTokenMutation,
   useResendEmailVerificationMutation,
   useVerifyEmailMutation,
+  useForgotPasswordMutation,
+  useResetForgottenPasswordMutation,
 } = AuthApiSlice;

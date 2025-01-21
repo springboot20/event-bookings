@@ -1,32 +1,30 @@
-import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useState } from "react";
 import {
   useAddEventToBookmarkMutation,
   useRemoveItemFromBookmarkMutation,
   useUserBookmarkQuery,
-} from '../features/bookmark/bookmark.slice';
-import { BookmarkInterface } from '../types/bookmark';
-import { SeatInterface } from '../types/seat';
+} from "../features/bookmark/bookmark.slice";
+import { BookmarkInterface } from "../types/bookmark";
+import { SeatInterface } from "../types/seat";
 import {
   useGetSeatsByEventQuery,
   useReserveSeatForEventMutation,
-} from '../features/seat/seat.slice';
+} from "../features/seat/seat.slice";
 
 export const useBookmark = () => {
   const { data, refetch } = useUserBookmarkQuery();
   const [addItemToBookmark] = useAddEventToBookmarkMutation();
   const [removeItemToFromBookmark] = useRemoveItemFromBookmarkMutation();
-  const [eventId, setEventId] = useState<string>('');
+  const [eventId, setEventId] = useState<string>("");
   const { data: seatData, isLoading, refetch: refetchSeats } = useGetSeatsByEventQuery(eventId);
   const [reserveSeatForEvent] = useReserveSeatForEventMutation();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [refreshTrigered, setRefreshTrigered] = useState(false);
-  const [message, setMessage] = useState<string>('');
   const bookmark: BookmarkInterface = data?.data?.bookmark;
 
-  const [query, setQuery] = useState<string>('');
+  const [query, setQuery] = useState<string>("");
   const seats: SeatInterface[] = seatData?.data?.seats;
 
   const [selectedSeats, setSelectedSeats] = useState<SeatInterface[]>([]);
@@ -46,27 +44,15 @@ export const useBookmark = () => {
   };
 
   const handleReserveSeatForEvent = async (eventId: string) => {
-    try {
-      const response = await reserveSeatForEvent({
-        eventId,
-        seats: [...new Set([...newSelectedSeatIds])],
-        reservedAt: Date.now(),
-      }).unwrap();
-
-      const data = response;
-
-      if (response.statusCode.toString().startsWith('2')) {
-        toast(data?.message, {
-          type: 'success',
-        });
-      }
-    } catch (error: any) {
-      toast(error?.error || error?.data?.message, { type: 'error' });
-    }
+    await reserveSeatForEvent({
+      eventId,
+      seats: [...new Set([...newSelectedSeatIds])],
+      reservedAt: Date.now(),
+    }).unwrap();
   };
 
   const filteredSeats =
-    query === ''
+    query === ""
       ? seats
       : seats?.filter((seat) => {
           return seat?.number.toString() === query;
@@ -96,29 +82,19 @@ export const useBookmark = () => {
       setSelectedItemId(null);
       setIsEditing(false);
     } else {
-      console.error('Invalid quantity input.');
+      console.error("Invalid quantity input.");
     }
   };
 
   const addNewItemToBookmark = async (eventId: string) => {
-    try {
-      const { message } = await addItemToBookmark({
-        eventId,
-        seats: [...new Set([...newSelectedSeatIds])],
-      }).unwrap();
+    await addItemToBookmark({
+      eventId,
+      seats: [...new Set([...newSelectedSeatIds])],
+    }).unwrap();
 
-      await handleReserveSeatForEvent(eventId);
-
-      if (message) {
-        toast.success(message);
-        setMessage(message);
-        setSelectedSeats([]);
-        setNewSelectedSeatIds([]);
-      }
-    } catch (error: any) {
-      toast.error(error.data?.message);
-      toast.error(error?.error);
-    }
+    await handleReserveSeatForEvent(eventId);
+    setSelectedSeats([]);
+    setNewSelectedSeatIds([]);
   };
 
   const handleCancelEdit = () => {
@@ -127,17 +103,8 @@ export const useBookmark = () => {
   };
 
   const handleDelete = async (eventId: string) => {
-    try {
-      const { message } = await removeItemToFromBookmark(eventId).unwrap();
-      setRefreshTrigered(!refreshTrigered);
-
-      if (message) {
-        toast.success(message);
-      }
-    } catch (error: any) {
-      toast.error(error.error);
-      toast.error(error.data?.message);
-    }
+    await removeItemToFromBookmark(eventId).unwrap();
+    setRefreshTrigered(!refreshTrigered);
   };
 
   return {
@@ -147,7 +114,6 @@ export const useBookmark = () => {
     isEditing,
     bookmark,
     refreshTrigered,
-    message,
     handleUpdateSeats,
     refetch,
     selectedItemId,

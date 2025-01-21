@@ -86,7 +86,7 @@ const Events = () => {
       <header className="flex items-center justify-between">
         <h1 className="text-base sm:text-xl font-semibold text-gray-900">Event Lists</h1>
 
-        {user?.role === AcceptedPersmissonRoles.ADMIN && (
+        {user?.role! === AcceptedPersmissonRoles.ADMIN && (
           <button
             type="button"
             onClick={() => navigate("/events/create-event")}

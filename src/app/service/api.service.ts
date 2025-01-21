@@ -27,6 +27,7 @@ export const ApiService = createApi({
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const rtkQueryErrorLogger: Middleware = (_: MiddlewareAPI) => (next) => (action) => {
   // RTK Query uses `createAsyncThunk` from redux-toolkit under the hood, so we're able to utilize these matchers!
+  console.log(action)
   if (isRejectedWithValue(action)) {
     const message = action.payload
       ? (action.payload as { data: any }).data?.message
