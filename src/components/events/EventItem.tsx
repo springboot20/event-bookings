@@ -97,10 +97,10 @@ export const EventItem: React.FC<{ event: EventInterface; handleOpenBookmark: ()
               <button
                 type="button"
                 onClick={() => onOpen(event?._id)}
-                className="flex items-center gap-1 text-xs rounded-3xl px-2 py-1.5 border hover:bg-red-400 bg-red-500 text-white"
+                className="flex items-center gap-1 text-xs rounded-3xl px-5 py-1.5 border hover:bg-red-400 bg-red-500 text-white"
               >
                 <TrashIcon className="h-5 w-5" />
-                <span>delete product</span>
+                <span>delete event</span>
               </button>
 
               <button
@@ -108,10 +108,10 @@ export const EventItem: React.FC<{ event: EventInterface; handleOpenBookmark: ()
                 onClick={() => {
                   navigate(`/events/${event?._id}/edit-event/`);
                 }}
-                className="flex items-center gap-1 text-xs rounded-3xl px-2 py-1.5 border hover:bg-indigo-400 bg-indigo-500 text-white"
+                className="flex items-center gap-1 text-xs rounded-3xl px-5 py-1.5 border hover:bg-indigo-400 bg-indigo-500 text-white"
               >
                 <PencilIcon className="h-5 w-5" />
-                <span>edit product</span>
+                <span>edit event</span>
               </button>
             </div>
           ) : (
