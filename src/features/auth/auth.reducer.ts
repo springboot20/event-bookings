@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LocalStorage } from "../../util";
+import { LocalStorage } from "../../app/util";
 import { AuthApiSlice } from "./auth.slice";
 import { TokensInterface } from "../../types/context";
 import { UserInterface } from "../../types/user";

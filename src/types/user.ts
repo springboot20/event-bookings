@@ -1,4 +1,4 @@
-import { AcceptedPersmissonRoles } from '../util';
+import { AcceptedPersmissonRoles } from "../app/util";
 
 export interface UserInterface {
   _id: string;

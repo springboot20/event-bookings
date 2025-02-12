@@ -8,7 +8,7 @@ import {
   VideoCameraIcon,
 } from "@heroicons/react/24/outline";
 
-import { classNames } from "../../../util";
+import { classNames } from "../../../app/util";
 import { useCreateEventMutation } from "../../../features/event/event.slice";
 import { useAddCategoryMutation } from "../../../features/category/category.slice";
 

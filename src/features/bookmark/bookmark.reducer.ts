@@ -1,15 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { LocalStorage } from '../../util';
-import { BookmarkSlice } from './bookmark.slice';
-import { BookmarkInterface } from '../../types/bookmark';
+import { createSlice } from "@reduxjs/toolkit";
+import { LocalStorage } from "../../app/util";
+import { BookmarkSlice } from "./bookmark.slice";
+import { BookmarkInterface } from "../../types/bookmark";
 
 const initialState = {
-  bookmark: LocalStorage.get('bookmark') as BookmarkInterface,
+  bookmark: LocalStorage.get("bookmark") as BookmarkInterface,
   isNewItemAddedToBookmark: false,
 };
 
 export const bookmarkSlice = createSlice({
-  name: 'bookmark',
+  name: "bookmark",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -20,7 +20,7 @@ export const bookmarkSlice = createSlice({
 
         state.bookmark = data.bookmark;
 
-        LocalStorage.set('bookmark', data.bookmark);
+        LocalStorage.set("bookmark", data.bookmark);
       }
     );
 
@@ -32,10 +32,10 @@ export const bookmarkSlice = createSlice({
         state.bookmark = data.bookmark;
         state.isNewItemAddedToBookmark = true;
 
-        LocalStorage.set('bookmark', data.bookmark);
+        LocalStorage.set("bookmark", data.bookmark);
       }
     );
   },
 });
 
-export const bookmarkReducer = bookmarkSlice.reducer
+export const bookmarkReducer = bookmarkSlice.reducer;

@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from "react";
 import cartImage from "../../assets/cart-image.jpg";
 import { Link } from "react-router-dom";
-import { formatPrice, classNames } from "../../util";
+import { formatPrice, classNames } from "../../app/util";
 import {
   PencilSquareIcon,
   TableCellsIcon,

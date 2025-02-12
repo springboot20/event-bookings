@@ -4,7 +4,7 @@ import { useGetEventByIdQuery } from "../../../features/event/event.slice";
 import { EventInterface } from "../../../types/events";
 import { ArrowLeftIcon, ClockIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import UserAvatar from "../../../assets/user-avatar.png";
-import { classNames, formatDate, formatDateTime, formatPrice } from "../../../util";
+import { classNames, formatDate, formatDateTime, formatPrice } from "../../../app/util";
 import Skeleton from "react-loading-skeleton";
 import Seats from "../../../components/seats/Seats";
 

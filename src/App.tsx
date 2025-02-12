@@ -1,10 +1,10 @@
-import { RouterProvider } from 'react-router-dom';
-import { router } from './routes/routes';
-import { useCallback, useEffect } from 'react';
-import { LocalStorage } from './util';
-import { jwtDecode } from 'jwt-decode';
-import { useRefreshAccessTokenMutation } from './features/auth/auth.slice';
-import { TokensInterface } from './types/context';
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/routes";
+import { useCallback, useEffect } from "react";
+import { LocalStorage } from "./app/util";
+import { jwtDecode } from "jwt-decode";
+import { useRefreshAccessTokenMutation } from "./features/auth/auth.slice";
+import { TokensInterface } from "./types/context";
 
 export default function App() {
   const [refreshAccessToken] = useRefreshAccessTokenMutation();
@@ -16,7 +16,7 @@ export default function App() {
 
         const { data } = response;
 
-        LocalStorage.set('tokens', data?.tokens);
+        LocalStorage.set("tokens", data?.tokens);
       } catch (error: any) {
         console.log(error);
       }
@@ -27,7 +27,7 @@ export default function App() {
   const authenticationExpires = useCallback((token: string) => {
     try {
       if (!token) {
-        LocalStorage.set('authentified', false);
+        LocalStorage.set("authentified", false);
         return;
       }
 
@@ -36,13 +36,13 @@ export default function App() {
 
       return !expirationTime || Date.now() >= expirationTime * 1000;
     } catch (error) {
-      console.error('Error decoding token:', error);
-      LocalStorage.set('authentified', false);
+      console.error("Error decoding token:", error);
+      LocalStorage.set("authentified", false);
     }
   }, []);
 
   useEffect(() => {
-    const tokens = LocalStorage.get('tokens') as TokensInterface;
+    const tokens = LocalStorage.get("tokens") as TokensInterface;
     const isTokenExpired = authenticationExpires(tokens?.accessToken);
 
     if (isTokenExpired) {

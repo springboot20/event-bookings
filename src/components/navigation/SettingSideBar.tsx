@@ -1,6 +1,6 @@
 import { Cog6ToothIcon, UserIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
-import { classNames } from "../../util";
+import { classNames } from "../../app/util";
 import { NavItem } from "../link/NavItem";
 import { motion } from "framer-motion";
 import { Fragment } from "react/jsx-runtime";
@@ -59,7 +59,7 @@ export default function SettingSidebar() {
                       aria-current={current ? "page" : undefined}
                       className={classNames(
                         current ? "hover:bg-[#F8F8F8]" : "",
-                        "py-2.5 px-4 w-full transition",
+                        "py-2.5 px-4 w-full transition"
                       )}
                     >
                       {({ isActive }) => (
@@ -67,15 +67,13 @@ export default function SettingSidebar() {
                           <Icon
                             className={classNames(
                               isActive ? "stroke-[#5932EA]" : "stroke-[#7B7B7B]",
-                              "h-6",
+                              "h-6"
                             )}
                           />
                           <span
                             className={classNames(
                               "text-base font-roboto capitalize",
-                              isActive
-                                ? "text-[#5932EA] font-medium"
-                                : "text-[#0C0C0D] font-normal",
+                              isActive ? "text-[#5932EA] font-medium" : "text-[#0C0C0D] font-normal"
                             )}
                           >
                             {label}
@@ -107,7 +105,7 @@ export default function SettingSidebar() {
                         aria-current={current ? "page" : undefined}
                         className={classNames(
                           current ? "hover:bg-[#F8F8F8]" : "",
-                          "py-2.5 px-4 w-full transition",
+                          "py-2.5 px-4 w-full transition"
                         )}
                       >
                         {({ isActive }) => (
@@ -115,7 +113,7 @@ export default function SettingSidebar() {
                             <Icon
                               className={classNames(
                                 isActive ? "stroke-[#5932EA]" : "stroke-[#7B7B7B]",
-                                "h-6",
+                                "h-6"
                               )}
                             />
                             <span
@@ -123,7 +121,7 @@ export default function SettingSidebar() {
                                 "text-base font-roboto capitalize",
                                 isActive
                                   ? "text-[#5932EA] font-medium"
-                                  : "text-[#0C0C0D] font-normal",
+                                  : "text-[#0C0C0D] font-normal"
                               )}
                             >
                               {label}

@@ -1,6 +1,6 @@
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import { useResetForgottenPasswordMutation } from "../../../features/auth/auth.slice";
-import { classNames } from "../../../util";
+import { classNames } from "../../../app/util";
 import { CustomErrorMessage } from "../../../components/Error";
 import { EyeIcon, EyeSlashIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import * as yup from "yup";

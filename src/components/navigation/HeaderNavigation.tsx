@@ -9,7 +9,7 @@ import {
   Transition,
 } from "@headlessui/react";
 import { Link, Navigate, NavLink } from "react-router-dom";
-import { classNames } from "../../util";
+import { classNames } from "../../app/util";
 import { Fragment } from "react";
 import { XMarkIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";

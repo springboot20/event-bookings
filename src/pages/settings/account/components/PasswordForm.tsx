@@ -4,7 +4,7 @@ import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import * as yup from "yup";
 import { CustomErrorMessage } from "../../../../components/Error";
-import { classNames } from "../../../../util";
+import { classNames } from "../../../../app/util";
 
 interface PasswordInitialValues {
   existingPassword: string;

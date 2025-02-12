@@ -4,7 +4,7 @@ import AuthLayout from "../layout/AuthLayout";
 import Login from "../pages/login";
 import Register from "../pages/register";
 import { PrivateRoute } from "../components/PrivateRoute";
-import { AcceptedPersmissonRoles } from "../util";
+import { AcceptedPersmissonRoles } from "../app/util";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Events from "../pages/events";
 import EditEvent from "../pages/events/edit/edit-event";

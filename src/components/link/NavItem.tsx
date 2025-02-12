@@ -1,6 +1,6 @@
 import { NavLink, NavLinkProps } from "react-router-dom";
 import React from "react";
-import { classNames } from "../../util";
+import { classNames } from "../../app/util";
 
 interface NavItemProps extends NavLinkProps {
   to: string;
@@ -24,7 +24,7 @@ export const NavItem: React.FC<NavItemProps> = ({
         classNames(
           'flex items-center space-x-4 relative w-full transition ease delay-400 before:content-[""] before:absolute before:left-0 before:w-1.5 before:rounded-tr-lg before:rounded-br-lg before:h-11 before:top-1/2 before:-translate-y-1/2',
           isActive && classNames("bg-[#F8F8F8] text-gray-700 before:bg-[#5932EA]", activeClass!),
-          className,
+          className
         )
       }
       onClick={() => {

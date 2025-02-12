@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
-import { classNames } from "../../util";
+import { classNames } from "../../app/util";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { CustomErrorMessage } from "../../components/Error";
 import { useForgotPasswordMutation } from "../../features/auth/auth.slice";

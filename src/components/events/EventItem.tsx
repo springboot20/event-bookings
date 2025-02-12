@@ -1,5 +1,5 @@
 import { EventInterface } from "../../types/events";
-import { AcceptedPersmissonRoles, formatDate, formatPrice, truncateChars } from "../../util";
+import { AcceptedPersmissonRoles, formatDate, formatPrice, truncateChars } from "../../app/util";
 import {
   BookmarkIcon,
   CalendarDaysIcon,

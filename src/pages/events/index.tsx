@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { EventSkeletonLoading } from "../../components/loaders/SkeletonLoader";
-import { AcceptedPersmissonRoles } from "../../util";
+import { AcceptedPersmissonRoles } from "../../app/util";
 import { useGetAllEventsQuery } from "../../features/event/event.slice";
 import { EventInterface } from "../../types/events";
 import { Pagination } from "../../components/Pagination";
