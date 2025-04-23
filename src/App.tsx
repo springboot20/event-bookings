@@ -2,7 +2,7 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/routes";
 import { useCallback, useEffect } from "react";
 import { LocalStorage } from "./app/util";
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from "jwt-decode";
 import { useRefreshAccessTokenMutation } from "./features/auth/auth.slice";
 import { TokensInterface } from "./types/context";
 
